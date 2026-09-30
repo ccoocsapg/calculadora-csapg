@@ -1162,11 +1162,15 @@ button{cursor:pointer}
     const exp=experienceScores(), merits=meritsScores(),pending=buildPending(exp,merits);
     if(r.rankingMode==='seniority'){
       const tSecure=merits?.formationSecureRaw||0,tPossible=merits?.formationPossibleRaw||0;
-      out.innerHTML=`<div class="result-hero"><div><div class="result-kicker">${esc(tr('resultSubtitle'))}</div><h3>${esc(tr('seniorityRanking'))}</h3><p>${esc(tr('seniorityRankingText'))}</p></div><div class="result-hero__score"><div class="result-number">${fmt(exp.seniority.secure)} <small>${state.lang==='ca'?'anys/punts':'años/puntos'}</small></div></div></div>
+      const sy=Math.max(0,num($('#seniorityYears').value)), sm=Math.max(0,Math.min(11,num($('#seniorityMonths').value)));
+      const seniorityShown=`${sy} ${state.lang==='ca'?'anys':'años'}${sm?` · ${sm} ${state.lang==='ca'?'mesos':'meses'}`:''}`;
+      out.innerHTML=`<div class="result-hero"><div><div class="result-kicker">${esc(tr('resultSubtitle'))}</div><h3>${esc(tr('seniorityRanking'))}</h3><p>${esc(tr('seniorityRankingText'))}</p></div><div class="result-hero__score"><div class="result-number" style="font-size:2rem">${esc(seniorityShown)}</div></div></div>
+      <div class="notice notice--info"><span>${esc(tr('seniorityExact'))}</span></div>
       <div class="result-grid"><div class="result-card"><h4>${esc(tr('tiebreakTitle'))}</h4><div class="tiebreak-score">${fmt(tSecure)}${tPossible>tSecure?` – ${fmt(tPossible)}`:''}</div><p>${esc(tr('tiebreakFormation'))}</p><small>${esc(tr('tiebreakNote'))} · § 2.2.1</small></div>${pendingHtml(pending)}</div>${literalWarningHtml(r)}${traceHtml(r,exp,merits)}${disclaimerHtml()}`;return;
     }
     const secure=exp.secure+merits.secure,possible=exp.possible+merits.possible; const range=possible>secure;
     out.innerHTML=`<div class="result-hero"><div><div class="result-kicker">${esc(tr('resultSubtitle'))}</div><h3>${esc(tr('resultTitle'))}</h3><p>${range?esc(tr('resultRange')):esc(tr('secureScore'))}</p></div><div class="result-hero__score"><div class="result-number">${range?`${fmt(secure)}–${fmt(possible)}`:fmt(secure)} <small>/ 100</small></div></div></div>
+    <div class="notice notice--info"><span>${esc(tr('tieGeneral'))} · § 2.2.1</span></div>
     <div class="result-grid"><div class="result-card"><h4>${esc(tr('total'))}</h4><div class="breakdown"><div class="breakdown-row"><span>${esc(tr('experienceBlock'))} <small>(${esc(tr('max'))} ${r.expMax})</small></span><strong>${exp.possible>exp.secure?`${fmt(exp.secure)}–${fmt(exp.possible)}`:fmt(exp.secure)}</strong></div><div class="breakdown-row"><span>${esc(tr('meritsBlock'))} <small>(${esc(tr('max'))} ${r.meritsMax})</small></span><strong>${merits.possible>merits.secure?`${fmt(merits.secure)}–${fmt(merits.possible)}`:fmt(merits.secure)}</strong></div><div class="breakdown-row"><span>${esc(tr('rawMerits'))}</span><strong>${merits.possibleRaw>merits.secureRaw?`${fmt(merits.secureRaw)}–${fmt(merits.possibleRaw)}`:fmt(merits.secureRaw)}</strong></div></div></div>${pendingHtml(pending)}</div>${literalWarningHtml(r)}${traceHtml(r,exp,merits)}${disclaimerHtml()}`;
   }
 
