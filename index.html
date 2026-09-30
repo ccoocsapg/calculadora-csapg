@@ -1,58 +1,369 @@
 <!doctype html>
-<html lang="es">
+<html lang="ca">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="Calculadora orientativa de puntuación para convocatorias internas del CSAPG basada en el Procediment de convocatòries internes CSAPG, ID 6455, versión 1.0 de 10/12/2025." />
-  <meta name="theme-color" content="#b00020" />
+  <meta name="theme-color" content="#D42E12" />
   <title>Calculadora CSAPG · Convocatorias internas</title>
   <style>
-:root {
-  --red: #b00020;
-  --red-2: #d71920;
-  --red-soft: #fff1f3;
-  --ink: #1c1f24;
-  --muted: #626973;
-  --line: #dfe3e8;
-  --panel: #ffffff;
-  --bg: #f6f7f9;
-  --green: #177245;
-  --green-soft: #edf8f2;
-  --amber: #9a5a00;
-  --amber-soft: #fff7e6;
-  --blue: #245f9e;
-  --blue-soft: #edf5fd;
-  --shadow: 0 18px 45px rgba(22, 28, 38, .08);
-  --radius: 18px;
-  --max: 1180px;
+:root{
+  --red:#D42E12;
+  --red-dark:#B7250F;
+  --yellow:#FFCC00;
+  --black:#000000;
+  --ink:#111111;
+  --muted:#626262;
+  --line:#d9d9d9;
+  --soft:#f2f2f2;
+  --panel:#ffffff;
+  --bg:#f4f4f4;
+  --green:#1f6d4d;
+  --green-soft:#eef7f2;
+  --amber:#7c5300;
+  --amber-soft:#fff5d8;
+  --blue:#275f96;
+  --blue-soft:#eef4fa;
+  --max:1180px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+body{
+  margin:0;
+  font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  line-height:1.48;
+  -webkit-font-smoothing:antialiased
+}
 button,input,select{font:inherit}
 button{cursor:pointer}
+[hidden]{display:none!important}
 .skip-link{position:absolute;left:-9999px;top:0;background:#000;color:#fff;padding:.75rem 1rem;z-index:9999}.skip-link:focus{left:1rem;top:1rem}
 .shell,.topbar__inner,.hero{width:min(calc(100% - 32px),var(--max));margin-inline:auto}
-.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.topbar__inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px}.brand__mark{background:var(--red);color:#fff;font-weight:900;letter-spacing:-.04em;padding:8px 10px;border-radius:8px}.brand__name{font-weight:800;line-height:1}.brand__sub{font-size:.78rem;color:var(--muted);margin-top:3px}.topbar__actions{display:flex;align-items:center;gap:10px}.protocol-chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;color:var(--ink);font-weight:700;font-size:.82rem}.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft)}.lang-switch{display:flex;border:1px solid var(--line);border-radius:10px;padding:3px;background:#fff}.lang-btn{border:0;background:transparent;border-radius:7px;padding:6px 9px;font-weight:800;color:var(--muted)}.lang-btn.is-active{background:var(--ink);color:#fff}
-.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.65fr);gap:40px;padding:64px 0 52px;align-items:center}.hero__content{max-width:800px}.eyebrow{font-size:.76rem;letter-spacing:.14em;font-weight:900;color:var(--red);text-transform:uppercase;margin-bottom:10px}.hero h1{font-size:clamp(2.2rem,5vw,4.5rem);line-height:1.02;letter-spacing:-.05em;margin:0 0 20px}.hero__lead{font-size:clamp(1rem,2vw,1.25rem);color:#414750;max-width:760px}.source-lock{display:flex;align-items:flex-start;gap:12px;border:1px solid #efb6bf;background:var(--red-soft);padding:15px 16px;border-radius:14px;margin-top:22px}.source-lock svg{width:24px;fill:var(--red);flex:none}.source-lock strong,.source-lock span{display:block}.source-lock span{font-size:.9rem;color:#5a3a3f;margin-top:2px}.hero__actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}.hero__aside{background:var(--ink);color:#fff;border-radius:24px;padding:26px;box-shadow:var(--shadow)}.hero-stat{padding:15px 0;border-bottom:1px solid rgba(255,255,255,.13)}.hero-stat:first-child{padding-top:0}.hero-stat__value,.hero-stat__label{display:block}.hero-stat__value{font-size:1.45rem;font-weight:900}.hero-stat__label{font-size:.9rem;color:#cbd0d6;margin-top:2px}.privacy-note{font-size:.82rem;color:#aeb5be;margin:18px 0 0}
-.btn{border-radius:11px;border:1px solid transparent;padding:11px 15px;font-weight:800;transition:.2s transform,.2s background,.2s border-color}.btn:hover{transform:translateY(-1px)}.btn--primary{background:var(--red);color:#fff}.btn--primary:hover{background:#910019}.btn--ghost{background:#fff;border-color:var(--line);color:var(--ink)}.btn--outline{background:#fff;border-color:#cfd4db;color:var(--ink)}.btn--lg{padding:14px 18px;font-size:1rem}.btn--small{padding:8px 10px;font-size:.85rem}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.calculator{padding:28px 0 72px}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}.section-heading h2{font-size:clamp(1.7rem,3vw,2.5rem);margin:0;letter-spacing:-.035em}.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 18px}.step{border:1px solid var(--line);background:#fff;padding:10px;border-radius:12px;display:flex;align-items:center;gap:9px;text-align:left;color:var(--muted)}.step span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#edf0f3;font-size:.82rem;font-weight:900}.step b{font-size:.86rem}.step.is-active{border-color:#ebb0ba;background:var(--red-soft);color:var(--red)}.step.is-active span{background:var(--red);color:#fff}.step.is-done{color:var(--green);border-color:#bfdfcf}.step.is-done span{background:var(--green-soft);color:var(--green)}
-.step-panel{display:none;background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:var(--shadow)}.step-panel.is-active{display:block}.card{background:#f8f9fb;border:1px solid #e8ebef;padding:18px;border-radius:14px;margin-bottom:22px}.card--accent{background:linear-gradient(135deg,#fff7f8,#fff);border-color:#f1c2c9}.card h3{margin:0 0 6px;font-size:1.05rem}.card p{margin:0;color:var(--muted)}
-.form-grid{display:grid;gap:16px}.form-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}.form-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}.field{display:flex;flex-direction:column;gap:7px;min-width:0}.field>span{font-weight:800;font-size:.88rem}.field small{color:var(--muted);font-size:.78rem}.field input,.field select{width:100%;border:1px solid #cfd4db;border-radius:10px;background:#fff;padding:11px 12px;color:var(--ink);min-height:44px}.field input:focus,.field select:focus{outline:3px solid rgba(176,0,32,.12);border-color:var(--red)}.field--span2{grid-column:span 2}.check-row{display:flex;align-items:flex-start;gap:10px;border:1px solid #e2e5e9;padding:12px;border-radius:10px;background:#fafbfc;font-size:.9rem}.check-row input{margin-top:3px;accent-color:var(--red)}
-.route-preview{margin-top:20px}.route-box{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:flex-start;background:#f7f8fa;border:1px solid var(--line);padding:16px;border-radius:14px}.route-box__badge{font-size:.74rem;font-weight:900;color:#fff;background:var(--ink);border-radius:999px;padding:5px 9px;white-space:nowrap}.route-box h4{margin:0 0 4px}.route-box p{margin:0;color:var(--muted);font-size:.9rem}.route-box small{display:block;color:#777f89;margin-top:6px}.route-box--warning{background:var(--amber-soft);border-color:#edcf94}.route-box--warning .route-box__badge{background:var(--amber)}
-.eligibility{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}.eligibility summary{cursor:pointer;font-weight:900;color:#363b42}.eligibility__body{padding-top:15px}.eligibility__body>p{color:var(--muted);margin-top:0}.inline-result{margin-top:16px}.panel-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:22px;margin-top:26px}.panel-actions--results{align-items:flex-end}.results-actions{display:flex;gap:10px;flex-wrap:wrap}
-.score-input-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.score-input-card{border:1px solid var(--line);border-radius:15px;padding:16px;background:#fff}.score-input-card__head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.score-input-card h4{margin:0;font-size:.95rem}.mini-score{font-weight:900;color:var(--red);background:var(--red-soft);border-radius:999px;padding:4px 8px;font-size:.8rem;white-space:nowrap}.years-months{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.score-input-card small{display:block;color:var(--muted)}
-.notice{display:flex;gap:9px;align-items:flex-start;padding:13px 15px;border-radius:12px;font-size:.88rem;margin:16px 0}.notice--info{background:var(--blue-soft);color:#244f7e;border:1px solid #c7ddf4}.notice--warning{background:var(--amber-soft);color:#744600;border:1px solid #edd197}.notice--success{background:var(--green-soft);color:#125c39;border:1px solid #c0e0ce}.notice--danger{background:#fff0f0;color:#8d1d1d;border:1px solid #efc0c0}
-.merit-section{padding:4px 0 26px;border-bottom:1px solid var(--line);margin-bottom:24px}.merit-section:last-child{border-bottom:0;margin-bottom:0}.merit-section__head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:6px}.merit-section__head>div{display:flex;align-items:center;gap:10px}.merit-section h3{margin:0;font-size:1.08rem}.section-number{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--ink);color:#fff;font-weight:900;font-size:.82rem}.section-help{color:var(--muted);font-size:.88rem;margin:0 0 14px}.dynamic-list{display:grid;gap:12px}.dynamic-list--compact{margin-top:12px}.dynamic-item{border:1px solid #dfe3e8;border-radius:14px;padding:15px;background:#fbfcfd}.dynamic-item__top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.item-title{font-size:.92rem}.icon-btn{width:32px;height:32px;border:1px solid #d8dde2;border-radius:8px;background:#fff;font-size:1.1rem;line-height:1}.item-calc{font-size:.82rem;color:var(--muted);margin-top:10px;border-top:1px dashed #d9dde2;padding-top:9px}.language-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;padding:11px}.language-row .icon-btn{margin-bottom:6px}
-.result-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;background:linear-gradient(135deg,#1d2025,#292e35);color:#fff;border-radius:20px;padding:25px;margin-bottom:18px}.result-hero__score{text-align:right}.result-number{font-size:clamp(2.4rem,6vw,4.8rem);font-weight:950;letter-spacing:-.055em;line-height:.9}.result-number small{font-size:1rem;color:#bfc5cc;letter-spacing:0}.result-kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:#f1a7b3;font-weight:900}.result-hero h3{font-size:1.35rem;margin:5px 0}.result-hero p{color:#c8cdd3;margin:0;max-width:680px}.result-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.result-card{border:1px solid var(--line);border-radius:15px;padding:17px;background:#fff}.result-card h4{margin:0 0 12px}.breakdown{display:grid;gap:9px}.breakdown-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding-bottom:8px;border-bottom:1px solid #edf0f2}.breakdown-row:last-child{border-bottom:0;padding-bottom:0}.breakdown-row span{color:#4b515a;font-size:.9rem}.breakdown-row strong{font-variant-numeric:tabular-nums}.trace-list{display:grid;gap:8px}.trace-item{padding:10px 11px;border-radius:10px;background:#f7f8fa;font-size:.84rem}.trace-item b{display:block;margin-bottom:2px}.trace-item span{color:var(--muted)}.pending-box{margin-top:16px}.range-score{font-weight:900;color:var(--amber)}.tag{display:inline-flex;border-radius:999px;padding:3px 7px;font-size:.7rem;font-weight:900}.tag--secure{background:var(--green-soft);color:var(--green)}.tag--pending{background:var(--amber-soft);color:var(--amber)}.tag--source{background:#eef0f3;color:#555c65}.tiebreak-score{font-size:2rem;font-weight:950;color:var(--red)}
-.method{padding:10px 0 80px}.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.method-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}.method-card__icon{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--red-soft);color:var(--red);font-weight:950}.method-card h3{font-size:1rem;margin:13px 0 6px}.method-card p{font-size:.88rem;color:var(--muted);margin:0}.footer{border-top:1px solid var(--line);background:#fff}.footer__inner{display:flex;justify-content:space-between;gap:30px;padding:28px 0}.footer p{margin:3px 0 0;color:var(--muted);font-size:.83rem}.footer__protocol{text-align:right;display:flex;flex-direction:column;font-size:.82rem;color:var(--muted)}.footer__protocol strong{color:var(--ink)}
-.dialog{max-width:620px;width:calc(100% - 32px);border:0;border-radius:20px;padding:0;box-shadow:0 30px 80px rgba(0,0,0,.25)}.dialog::backdrop{background:rgba(20,22,27,.62);backdrop-filter:blur(3px)}.dialog form{padding:25px;position:relative}.dialog__close{position:absolute;right:16px;top:16px;border:0;background:#eef0f3;border-radius:50%;width:34px;height:34px;font-size:1.25rem}.dialog h2{margin:0 0 18px;letter-spacing:-.03em}.protocol-meta{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden}.protocol-meta>div{padding:11px;border-bottom:1px solid var(--line)}.protocol-meta>div:nth-child(odd){border-right:1px solid var(--line)}.protocol-meta>div:nth-last-child(-n+2){border-bottom:0}.protocol-meta dt{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.protocol-meta dd{margin:3px 0 0;font-weight:900}
-[hidden]{display:none!important}
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:42px}.hero__aside{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.hero-stat{border:0;padding:0}.privacy-note{grid-column:1/-1;margin:0}.score-input-grid,.form-grid--3,.method-grid{grid-template-columns:1fr 1fr}.result-grid{grid-template-columns:1fr}}
-@media(max-width:680px){.shell,.topbar__inner,.hero{width:min(calc(100% - 22px),var(--max))}.topbar__inner{min-height:64px}.brand__sub,.protocol-chip span:not(.status-dot){display:none}.hero{gap:24px;padding:34px 0}.hero h1{font-size:2.35rem}.hero__aside{grid-template-columns:1fr 1fr;padding:20px}.hero-stat:nth-child(3){grid-column:1/-1}.stepper{gap:4px}.step{justify-content:center;padding:8px 5px}.step b{display:none}.step-panel{padding:18px;border-radius:16px}.form-grid--2,.form-grid--3,.score-input-grid,.method-grid{grid-template-columns:1fr}.field--span2{grid-column:auto}.merit-section__head{align-items:flex-start}.result-hero{grid-template-columns:1fr}.result-hero__score{text-align:left}.panel-actions{align-items:stretch}.panel-actions--results{flex-direction:column}.results-actions{width:100%}.results-actions .btn{flex:1}.footer__inner{flex-direction:column}.footer__protocol{text-align:left}.protocol-meta{grid-template-columns:1fr}.protocol-meta>div:nth-child(odd){border-right:0}.protocol-meta>div:nth-last-child(-n+2){border-bottom:1px solid var(--line)}.protocol-meta>div:last-child{border-bottom:0}}
-@media print{.topbar,.hero,.stepper,.panel-actions,.method,.footer,.section-heading .btn{display:none!important}body{background:#fff}.calculator{padding:0}.step-panel{display:none!important;border:0;box-shadow:none;padding:0}.step-panel[data-step="4"]{display:block!important}.result-card,.result-hero{break-inside:avoid}.result-hero{color:#000;background:#fff;border:2px solid #222}.result-hero p,.result-kicker{color:#333}}
 
+/* CAPÇALERA CCOO */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:#fff;
+  border-top:7px solid var(--red);
+  border-bottom:1px solid var(--line)
+}
+.topbar__inner{
+  min-height:78px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px
+}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand__logo{width:150px;height:54px;object-fit:contain;object-position:left center;background:#fff}
+.brand__text{display:flex;flex-direction:column;border-left:3px solid var(--red);padding-left:12px;line-height:1.05}
+.brand__name{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:850;font-size:1.02rem}
+.brand__sub{font-size:.72rem;color:var(--muted);margin-top:5px;text-transform:uppercase;font-weight:800;letter-spacing:.04em}
+.topbar__actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.portal-link{
+  border:2px solid #000;background:#fff;color:#000;
+  padding:8px 11px;font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.025em
+}
+.portal-link:hover{background:#000;color:#fff}
+.protocol-chip{
+  display:flex;align-items:center;gap:8px;
+  border:2px solid #000;background:#fff;border-radius:0;
+  padding:8px 11px;color:#000;font-weight:900;font-size:.73rem;text-transform:uppercase
+}
+.protocol-chip:hover{background:#000;color:#fff}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex:none}
+.lang-switch{display:flex;border:2px solid #000;border-radius:0;background:#fff}
+.lang-btn{border:0;background:#fff;border-radius:0;padding:7px 10px;font-weight:900;color:#000;font-size:.76rem}
+.lang-btn.is-active{background:#000;color:#fff}
+
+/* HERO */
+.hero{
+  position:relative;
+  display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.65fr);
+  gap:38px;
+  padding:42px 34px 34px;
+  margin-top:28px;
+  align-items:end;
+  background:#fff;
+  border-top:9px solid var(--red);
+  border-bottom:9px solid #000;
+  overflow:hidden
+}
+.hero:after{
+  content:"";position:absolute;right:-70px;top:-90px;width:220px;height:220px;
+  background:var(--yellow);transform:rotate(18deg);z-index:0
+}
+.hero>*{position:relative;z-index:1}
+.hero__content{max-width:800px}
+.eyebrow{font-size:.7rem;letter-spacing:.11em;font-weight:900;color:var(--red);text-transform:uppercase;margin-bottom:8px}
+.hero h1{
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(2.15rem,5vw,4.3rem);line-height:1.01;letter-spacing:-.04em;
+  margin:0 0 18px
+}
+.hero__lead{font-size:clamp(1rem,2vw,1.18rem);color:#404040;max-width:760px;margin:0}
+.source-lock{
+  display:flex;align-items:flex-start;gap:12px;
+  border-left:6px solid var(--red);background:#f2f2f2;
+  padding:14px 16px;margin-top:22px
+}
+.source-lock svg{width:23px;fill:var(--red);flex:none}
+.source-lock strong,.source-lock span{display:block}
+.source-lock strong{text-transform:uppercase;font-size:.78rem}
+.source-lock span{font-size:.86rem;color:#555;margin-top:3px}
+.hero__actions{display:flex;gap:9px;margin-top:24px;flex-wrap:wrap}
+.hero__aside{background:#000;color:#fff;padding:22px;border-radius:0}
+.hero-stat{padding:13px 0;border-bottom:1px solid #3c3c3c}
+.hero-stat:first-child{padding-top:0}.hero-stat:last-of-type{border-bottom:0}
+.hero-stat__value,.hero-stat__label{display:block}
+.hero-stat__value{font-size:1.42rem;font-weight:950}
+.hero-stat__label{font-size:.78rem;color:#d2d2d2;margin-top:3px;text-transform:uppercase;font-weight:700}
+.privacy-note{font-size:.76rem;color:#bfbfbf;margin:16px 0 0;border-top:1px solid #3c3c3c;padding-top:13px}
+
+/* BOTONS */
+.btn{
+  border-radius:0;border:2px solid transparent;
+  padding:10px 15px;min-height:42px;
+  font-weight:900;font-size:.76rem;text-transform:uppercase;letter-spacing:.035em;
+  transition:background .14s,color .14s,border-color .14s
+}
+.btn:hover{transform:none}
+.btn--primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn--primary:hover{background:#000;border-color:#000}
+.btn--ghost,.btn--outline{background:#fff;border-color:#000;color:#000}
+.btn--ghost:hover,.btn--outline:hover{background:#000;color:#fff}
+.btn--lg{padding:12px 18px;font-size:.79rem}
+.btn--small{padding:7px 10px;min-height:34px;font-size:.68rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* CALCULADORA */
+.calculator{padding:30px 0 72px}
+.section-heading{
+  display:flex;align-items:end;justify-content:space-between;gap:20px;
+  margin-bottom:18px;padding-bottom:9px;border-bottom:4px solid #000
+}
+.section-heading h2{
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(1.7rem,3vw,2.45rem);margin:0;letter-spacing:-.025em
+}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 0 16px;border:1px solid #000}
+.step{
+  border:0;border-right:1px solid #000;background:#fff;padding:11px;
+  border-radius:0;display:flex;align-items:center;gap:9px;text-align:left;color:#555;
+  text-transform:uppercase
+}
+.step:last-child{border-right:0}
+.step span{
+  width:28px;height:28px;border-radius:0;display:grid;place-items:center;
+  background:#e7e7e7;font-size:.76rem;font-weight:950
+}
+.step b{font-size:.72rem;font-weight:900}
+.step.is-active{background:var(--red);color:#fff}
+.step.is-active span{background:#fff;color:var(--red)}
+.step.is-done{color:#000;background:#f1f1f1}
+.step.is-done span{background:#000;color:#fff}
+.step-panel{
+  display:none;background:#fff;border:1px solid var(--line);
+  border-top:7px solid var(--red);border-radius:0;padding:26px;box-shadow:none
+}
+.step-panel.is-active{display:block}
+.card{
+  background:#f2f2f2;border:0;border-left:6px solid #000;
+  padding:16px;border-radius:0;margin-bottom:22px
+}
+.card--accent{background:#fff;border:1px solid var(--line);border-left:6px solid var(--red)}
+.card h3{margin:0 0 6px;font-size:1rem;text-transform:uppercase}
+.card p{margin:0;color:var(--muted)}
+
+/* FORMULARIS */
+.form-grid{display:grid;gap:16px}
+.form-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.form-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>span{font-weight:900;font-size:.75rem;text-transform:uppercase}
+.field small{color:var(--muted);font-size:.74rem}
+.field input,.field select{
+  width:100%;border:1px solid #999;border-radius:0;background:#fff;
+  padding:11px 12px;color:var(--ink);min-height:44px
+}
+.field input:focus,.field select:focus{
+  outline:4px solid rgba(255,204,0,.35);border-color:#000
+}
+.field--span2{grid-column:span 2}
+.check-row{
+  display:flex;align-items:flex-start;gap:10px;border:1px solid #aaa;
+  padding:11px;background:#fff;border-radius:0;font-size:.86rem
+}
+.check-row input{margin-top:3px;accent-color:var(--red)}
+
+.route-preview{margin-top:20px}
+.route-box{
+  display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:flex-start;
+  background:#f2f2f2;border-left:6px solid #000;padding:15px
+}
+.route-box__badge{
+  font-size:.66rem;font-weight:900;color:#fff;background:#000;
+  border-radius:0;padding:5px 8px;white-space:nowrap;text-transform:uppercase
+}
+.route-box h4{margin:0 0 4px;text-transform:uppercase;font-size:.86rem}
+.route-box p{margin:0;color:var(--muted);font-size:.86rem}
+.route-box small{display:block;color:#6a6a6a;margin-top:6px}
+.route-box--warning{background:var(--amber-soft);border-left-color:var(--yellow)}
+.route-box--warning .route-box__badge{background:#000}
+
+.eligibility{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
+.eligibility summary{cursor:pointer;font-weight:900;color:#222;text-transform:uppercase;font-size:.8rem}
+.eligibility__body{padding-top:15px}.eligibility__body>p{color:var(--muted);margin-top:0}
+.inline-result{margin-top:16px}
+.panel-actions{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  border-top:1px solid var(--line);padding-top:20px;margin-top:24px
+}
+.panel-actions--results{align-items:flex-end}.results-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.score-input-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.score-input-card{border:1px solid var(--line);border-top:5px solid #000;border-radius:0;padding:15px;background:#fff}
+.score-input-card__head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.score-input-card h4{margin:0;font-size:.88rem;text-transform:uppercase}
+.mini-score{
+  font-weight:950;color:#fff;background:var(--red);border-radius:0;
+  padding:4px 7px;font-size:.76rem;white-space:nowrap
+}
+.years-months{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+.score-input-card small{display:block;color:var(--muted)}
+
+.notice{
+  display:flex;gap:9px;align-items:flex-start;
+  padding:12px 14px;border-radius:0;font-size:.84rem;margin:16px 0;
+  background:#fff;border:1px solid var(--line);border-left:6px solid #000
+}
+.notice--info{background:#fff;color:#333;border-left-color:var(--blue)}
+.notice--warning{background:#fff;color:#453100;border-left-color:var(--yellow)}
+.notice--success{background:#fff;color:#164e38;border-left-color:var(--green)}
+.notice--danger{background:#fff;color:#7f1616;border-left-color:var(--red)}
+
+.merit-section{padding:4px 0 24px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.merit-section:last-child{border-bottom:0;margin-bottom:0}
+.merit-section__head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:6px}
+.merit-section__head>div{display:flex;align-items:center;gap:10px}
+.merit-section h3{margin:0;font-size:.95rem;text-transform:uppercase}
+.section-number{
+  width:30px;height:30px;border-radius:0;display:grid;place-items:center;
+  background:#000;color:#fff;font-weight:950;font-size:.78rem
+}
+.section-help{color:var(--muted);font-size:.84rem;margin:0 0 14px}
+.dynamic-list{display:grid;gap:12px}.dynamic-list--compact{margin-top:12px}
+.dynamic-item{border:1px solid var(--line);border-left:5px solid #000;border-radius:0;padding:14px;background:#fff}
+.dynamic-item__top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.item-title{font-size:.84rem;text-transform:uppercase}
+.icon-btn{
+  width:32px;height:32px;border:2px solid #000;border-radius:0;background:#fff;
+  font-size:1rem;line-height:1
+}
+.icon-btn:hover{background:#000;color:#fff}
+.item-calc{font-size:.8rem;color:var(--muted);margin-top:10px;border-top:1px dashed #bbb;padding-top:9px}
+.language-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;padding:11px}
+.language-row .icon-btn{margin-bottom:6px}
+
+/* RESULTATS */
+.result-hero{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;
+  background:#000;color:#fff;border-radius:0;padding:24px;margin-bottom:18px;
+  border-top:8px solid var(--red)
+}
+.result-hero__score{text-align:right}
+.result-number{font-size:clamp(2.35rem,6vw,4.6rem);font-weight:950;letter-spacing:-.04em;line-height:.92}
+.result-number small{font-size:.9rem;color:#ddd;letter-spacing:0}
+.result-kicker{font-size:.69rem;text-transform:uppercase;letter-spacing:.11em;color:var(--yellow);font-weight:900}
+.result-hero h3{font-size:1.28rem;margin:5px 0;text-transform:uppercase}
+.result-hero p{color:#d0d0d0;margin:0;max-width:680px}
+.result-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+.result-card{border:1px solid var(--line);border-left:5px solid #000;border-radius:0;padding:16px;background:#fff}
+.result-card h4{margin:0 0 12px;text-transform:uppercase;font-size:.82rem}
+.breakdown{display:grid;gap:9px}
+.breakdown-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding-bottom:8px;border-bottom:1px solid #ddd}
+.breakdown-row:last-child{border-bottom:0;padding-bottom:0}
+.breakdown-row span{color:#444;font-size:.85rem}
+.breakdown-row strong{font-variant-numeric:tabular-nums}
+.trace-list{display:grid;gap:8px}
+.trace-item{padding:10px 11px;border-left:4px solid #bbb;background:#f3f3f3;font-size:.81rem}
+.trace-item b{display:block;margin-bottom:2px}.trace-item span{color:var(--muted)}
+.pending-box{margin-top:16px}.range-score{font-weight:900;color:var(--amber)}
+.tag{display:inline-flex;border-radius:0;padding:3px 6px;font-size:.65rem;font-weight:900;text-transform:uppercase}
+.tag--secure{background:var(--green);color:#fff}
+.tag--pending{background:var(--yellow);color:#000}
+.tag--source{background:#000;color:#fff}
+.tiebreak-score{font-size:1.9rem;font-weight:950;color:var(--red)}
+
+.method{padding:10px 0 80px}
+.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.method-card{background:#fff;border:1px solid var(--line);border-top:5px solid #000;border-radius:0;padding:18px}
+.method-card:nth-child(2){border-top-color:var(--red)}
+.method-card:nth-child(3){border-top-color:var(--yellow)}
+.method-card__icon{
+  display:grid;place-items:center;width:38px;height:38px;border-radius:0;
+  background:#000;color:#fff;font-weight:950
+}
+.method-card h3{font-size:.88rem;margin:13px 0 6px;text-transform:uppercase}
+.method-card p{font-size:.84rem;color:var(--muted);margin:0}
+
+/* PEU / DIÀLEG */
+.footer{border-top:7px solid #000;background:#fff}
+.footer__inner{display:flex;justify-content:space-between;gap:30px;padding:25px 0}
+.footer p{margin:3px 0 0;color:var(--muted);font-size:.78rem}
+.footer__protocol{text-align:right;display:flex;flex-direction:column;font-size:.77rem;color:var(--muted)}
+.footer__protocol strong{color:var(--ink)}
+.dialog{
+  max-width:620px;width:calc(100% - 32px);border:0;border-radius:0;padding:0;
+  box-shadow:0 30px 80px rgba(0,0,0,.28)
+}
+.dialog::backdrop{background:rgba(0,0,0,.68)}
+.dialog form{padding:25px;position:relative;border-top:7px solid var(--red)}
+.dialog__close{
+  position:absolute;right:16px;top:16px;border:2px solid #000;background:#fff;
+  border-radius:0;width:34px;height:34px;font-size:1.2rem
+}
+.dialog__close:hover{background:#000;color:#fff}
+.dialog h2{margin:0 0 18px;letter-spacing:-.02em}
+.protocol-meta{display:grid;grid-template-columns:1fr 1fr;border:1px solid #aaa;border-radius:0;overflow:hidden}
+.protocol-meta>div{padding:11px;border-bottom:1px solid #aaa}
+.protocol-meta>div:nth-child(odd){border-right:1px solid #aaa}
+.protocol-meta>div:nth-last-child(-n+2){border-bottom:0}
+.protocol-meta dt{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:900}
+.protocol-meta dd{margin:3px 0 0;font-weight:900}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;padding:30px 22px 24px}
+  .hero__aside{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .hero-stat{padding:10px;border-right:1px solid #3c3c3c;border-bottom:0}
+  .hero-stat:last-of-type{border-right:0}.privacy-note{grid-column:1/-1;margin:8px 10px 0}
+  .score-input-grid,.form-grid--3,.method-grid{grid-template-columns:1fr 1fr}
+  .result-grid{grid-template-columns:1fr}
+}
+@media(max-width:680px){
+  .shell,.topbar__inner,.hero{width:min(calc(100% - 22px),var(--max))}
+  .topbar__inner{min-height:68px}.brand__logo{width:116px;height:44px}.brand__text{display:none}
+  .portal-link{display:none}.protocol-chip span:not(.status-dot){display:none}
+  .hero{gap:22px;margin-top:16px;padding:24px 18px 20px;border-top-width:7px;border-bottom-width:7px}
+  .hero h1{font-size:2.08rem}.hero__aside{grid-template-columns:1fr 1fr}.hero-stat:nth-child(3){grid-column:1/-1;border-top:1px solid #3c3c3c}
+  .stepper{gap:0}.step{justify-content:center;padding:8px 5px}.step b{display:none}
+  .step-panel{padding:17px;border-top-width:6px}
+  .form-grid--2,.form-grid--3,.score-input-grid,.method-grid{grid-template-columns:1fr}
+  .field--span2{grid-column:auto}.merit-section__head{align-items:flex-start}
+  .result-hero{grid-template-columns:1fr}.result-hero__score{text-align:left}
+  .panel-actions{align-items:stretch}.panel-actions--results{flex-direction:column}
+  .results-actions{width:100%}.results-actions .btn{flex:1}
+  .footer__inner{flex-direction:column}.footer__protocol{text-align:left}
+  .protocol-meta{grid-template-columns:1fr}
+  .protocol-meta>div:nth-child(odd){border-right:0}
+  .protocol-meta>div:nth-last-child(-n+2){border-bottom:1px solid #aaa}
+  .protocol-meta>div:last-child{border-bottom:0}
+}
+@media print{
+  .topbar,.hero,.stepper,.panel-actions,.method,.footer,.section-heading .btn{display:none!important}
+  body{background:#fff}.calculator{padding:0}.step-panel{display:none!important;border:0;padding:0}
+  .step-panel[data-step="4"]{display:block!important}.result-card,.result-hero{break-inside:avoid}
+  .result-hero{color:#000;background:#fff;border:2px solid #000}.result-hero p,.result-kicker{color:#333}
+}
 </style>
 </head>
 <body>
@@ -60,21 +371,22 @@ button{cursor:pointer}
 
   <header class="topbar">
     <div class="topbar__inner">
-      <div class="brand" aria-label="CCOO CSAPG">
-        <div class="brand__mark" aria-hidden="true">CCOO</div>
-        <div>
-          <div class="brand__name">CSAPG</div>
-          <div class="brand__sub" data-i18n="brandSub">Herramienta informativa</div>
+      <div class="brand" aria-label="CCOO Sanitat CSAPG">
+        <img class="brand__logo" src="https://www.ccoo.cat/imatges/logos/descarrega/3.Federacions/federacio_sanitat/sanitat.jpg" alt="CCOO Sanitat Catalunya">
+        <div class="brand__text">
+          <div class="brand__name">CSAPG · Calculadora</div>
+          <div class="brand__sub" data-i18n="brandSub">Eina informativa</div>
         </div>
       </div>
       <div class="topbar__actions">
+        <a class="portal-link" href="https://ccoocsapg.github.io/app/" aria-label="Portal CCOO CSAPG">Portal CCOO CSAPG</a>
         <button id="protocolButton" class="protocol-chip" type="button" aria-haspopup="dialog">
           <span class="status-dot"></span>
           <span data-i18n="protocolChip">Protocolo ID 6455 · v1.0</span>
         </button>
         <div class="lang-switch" role="group" aria-label="Idioma">
-          <button type="button" class="lang-btn is-active" data-lang="es" aria-pressed="true">ES</button>
-          <button type="button" class="lang-btn" data-lang="ca" aria-pressed="false">CAT</button>
+          <button type="button" class="lang-btn is-active" data-lang="ca" aria-pressed="true">CAT</button>
+          <button type="button" class="lang-btn" data-lang="es" aria-pressed="false">ES</button>
         </div>
       </div>
     </div>
@@ -343,7 +655,7 @@ button{cursor:pointer}
       <div class="footer__protocol">
         <strong>Procediment de convocatòries internes CSAPG</strong>
         <span>ID 6455 · versió 1.0 · 10/12/2025</span>
-        <span data-i18n="appVersion">Calculadora v0.3 · revisión 30/09/2026</span>
+        <span data-i18n="appVersion">Calculadora v0.4 · revisió 30/09/2026</span>
       </div>
     </div>
   </footer>
@@ -761,7 +1073,7 @@ button{cursor:pointer}
   const fmt = (v, digits = 2) => new Intl.NumberFormat(state.lang === 'ca' ? 'ca-ES' : 'es-ES', { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(Number(v || 0));
   const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 
-  const state = { lang: 'es', step: 1, requirementValues: {} };
+  const state = { lang: 'ca', step: 1, requirementValues: {} };
 
   const T = {
     es: {
@@ -786,7 +1098,7 @@ button{cursor:pointer}
       methodEyebrow:'TRANSPARENCIA', methodTitle:'Qué hace —y qué no hace— la calculadora', method1Title:'Aplica reglas literales', method1Text:'Cuando el protocolo fija una equivalencia, un máximo o una puntuación concreta, se aplica tal cual.',
       method2Title:'Señala lo interpretable', method2Text:'Si falta una duración mínima, no consta la especificidad o el texto no define un redondeo, el resultado lo marca como pendiente o sujeto a interpretación.',
       method3Title:'No sustituye la valoración oficial', method3Text:'La puntuación oficial es la que resulte del procedimiento y de la evaluación de los órganos previstos en él.',
-      footerPurpose:'Herramienta informativa para revisar el baremo de convocatorias internas.', appVersion:'Calculadora v0.3 · revisión 30/09/2026', source:'FUENTE', version:'Versión', versionDate:'Fecha versión', documentType:'Tipo', procedure:'Procedimiento',
+      footerPurpose:'Herramienta informativa para revisar el baremo de convocatorias internas.', appVersion:'Calculadora v0.4 · revisió 30/09/2026', source:'FUENTE', version:'Versión', versionDate:'Fecha versión', documentType:'Tipo', procedure:'Procedimiento',
       dialogText:'Toda regla de cálculo implementada en esta web debe poder rastrearse a un apartado de este procedimiento. Cuando el documento no permite resolver algo de forma automática, la herramienta lo identifica expresamente.',
       important:'Importante', dialogWarning:'Esta herramienta no es una aplicación oficial del CSAPG y no sustituye la relación provisional o definitiva de puntuaciones.',
       courseName:'Nombre del curso', completionDate:'Fecha de finalización', modality:'Modalidad', onsite:'Presencial', online:'Online / distancia', unknownMode:'No consta', specificity:'Relación con el servicio', specificYes:'Específica del servicio', specificNo:'Relacionada con la vacante, no específica', specificUnknown:'No lo sé', hours:'Horas que constan', cfcCredits:'Créditos CFC', days:'Días identificables', beforeTitle:'¿Anterior a la titulación de acceso?', no:'No', yes:'Sí', yesCompatible:'Sí, pero contenido idéntico/compatible',
@@ -832,7 +1144,7 @@ button{cursor:pointer}
       eligibilityTitle:'Comprovar també requisits d’accés', eligibilityIntro:'Aquesta comprovació no modifica la puntuació: avisa si les dades introduïdes no encaixen amb els requisits previs del protocol.', indefinite:'Contracte laboral indefinit', active:'En actiu o en situació assimilada de l’apartat 2.1.4 en la data de publicació', plantilla:'Situació de plantilla', dedication:'Dedicació contractual', partial:'Temps parcial', sameCategory:'Ja ostento la categoria de la plaça', requiredTitle:'Disposo de titulació/requisits legals de la plaça', continue:'Continuar', back:'Enrere',
       expTitle:'Antiguitat i experiència', expIntro:'Introdueix els períodes efectius que constin o hagin de constar a la data de tall. L’antiguitat reconeguda en nòmina puntua només per anys complets quan el protocol ho diu expressament.', seniority:'Antiguitat CSAPG reconeguda en nòmina', years:'Anys', months:'Mesos addicionals', categoryExperience:'Experiència en la categoria de la plaça dins del CSAPG', serviceExperience:'Experiència en la categoria dins del servei concret',
       coursesTitle:'Formació continuada', addCourse:'+ Afegir curs', coursesHelp:'Afegeix cada curs. La calculadora converteix ECTS, crèdits CFC o dies quan correspon i aplica presencial/online segons el barem de la teva ruta.', academicTitle:'Formació acadèmica / titulacions addicionals', addAcademic:'+ Afegir titulació', certsTitle:'ACTIC i idiomes', none:'Cap', catalan:'Català', otherLanguages:'Altres idiomes', addLanguage:'+ Afegir idioma', languagesCap:'Només compta el nivell més alt de cada idioma; màxim total 1 punt.', researchTeachingTitle:'Recerca i docència', calculate:'Calcular resultat', editMerits:'Editar mèrits', print:'Imprimir / Desar PDF', newCalculation:'Nou càlcul',
-      methodEyebrow:'TRANSPARÈNCIA', methodTitle:'Què fa —i què no fa— la calculadora', method1Title:'Aplica regles literals', method1Text:'Quan el protocol fixa una equivalència, un màxim o una puntuació concreta, s’aplica tal qual.', method2Title:'Assenyala el que és interpretable', method2Text:'Si falta una durada mínima, no consta l’especificitat o el text no defineix un arrodoniment, el resultat ho marca com a pendent o subjecte a interpretació.', method3Title:'No substitueix la valoració oficial', method3Text:'La puntuació oficial és la que resulti del procediment i de l’avaluació dels òrgans que hi estan previstos.', footerPurpose:'Eina informativa per revisar el barem de convocatòries internes.', appVersion:'Calculadora v0.3 · revisió 30/09/2026', source:'FONT', version:'Versió', versionDate:'Data versió', documentType:'Tipus', procedure:'Procediment', dialogText:'Tota regla de càlcul implementada en aquesta web s’ha de poder rastrejar a un apartat d’aquest procediment. Quan el document no permet resoldre alguna cosa de forma automàtica, l’eina ho identifica expressament.', important:'Important', dialogWarning:'Aquesta eina no és una aplicació oficial del CSAPG i no substitueix la relació provisional o definitiva de puntuacions.',
+      methodEyebrow:'TRANSPARÈNCIA', methodTitle:'Què fa —i què no fa— la calculadora', method1Title:'Aplica regles literals', method1Text:'Quan el protocol fixa una equivalència, un màxim o una puntuació concreta, s’aplica tal qual.', method2Title:'Assenyala el que és interpretable', method2Text:'Si falta una durada mínima, no consta l’especificitat o el text no defineix un arrodoniment, el resultat ho marca com a pendent o subjecte a interpretació.', method3Title:'No substitueix la valoració oficial', method3Text:'La puntuació oficial és la que resulti del procediment i de l’avaluació dels òrgans que hi estan previstos.', footerPurpose:'Eina informativa per revisar el barem de convocatòries internes.', appVersion:'Calculadora v0.4 · revisió 30/09/2026', source:'FONT', version:'Versió', versionDate:'Data versió', documentType:'Tipus', procedure:'Procediment', dialogText:'Tota regla de càlcul implementada en aquesta web s’ha de poder rastrejar a un apartat d’aquest procediment. Quan el document no permet resoldre alguna cosa de forma automàtica, l’eina ho identifica expressament.', important:'Important', dialogWarning:'Aquesta eina no és una aplicació oficial del CSAPG i no substitueix la relació provisional o definitiva de puntuacions.',
       courseName:'Nom del curs', completionDate:'Data de finalització', modality:'Modalitat', onsite:'Presencial', online:'Online / distància', unknownMode:'No consta', specificity:'Relació amb el servei', specificYes:'Específica del servei', specificNo:'Relacionada amb la vacant, no específica', specificUnknown:'No ho sé', hours:'Hores que consten', cfcCredits:'Crèdits CFC', days:'Dies identificables', beforeTitle:'Anterior a la titulació d’accés?', no:'No', yes:'Sí', yesCompatible:'Sí, però contingut idèntic/compatible', academicName:'Nom de la titulació', academicType:'Tipus', durationHours:'Durada acreditada (hores)', durationEcts:'Durada acreditada (ECTS)', academicSpecific:'És específica del servei?', dontKnow:'No ho sé', requiredAcademic:'És la titulació mínima/requisit obligatori per accedir a la plaça', language:'Idioma', level:'Nivell oficial',
       providerEligible:'Entitat/centre admès o homologat segons el protocol', documented:'Disposo de certificat o documentació acreditativa', practiceActivity:'És una activitat de pràctiques (no computar com a curs)', unrelated:'No relacionada amb la vacant', providerUnknown:'No ho sé / pendent de comprovar', providerNo:'No compleix / no homologat', levelEligible:'És una titulació addicional de nivell igual o superior i de la branca exigida pel protocol', providerPending:'Cal comprovar que l’entitat o l’homologació encaixa en el protocol.', documentationPending:'Falta confirmar documentació acreditativa.', practiceExcluded:'Les pràctiques no es computen com a curs de formació.', unrelatedExcluded:'La formació no relacionada amb la vacant no puntua.', levelPending:'Cal comprovar que la titulació és de nivell igual o superior i de la mateixa branca quan el protocol ho exigeix.', creditsConflict:'Consten ECTS i crèdits CFC però no hores: el protocol no fixa quina conversió preval en aquest supòsit.', seniorityExact:'En àrees comunes de canvi de torn/servei ordena l’antiguitat exacta reconeguda pel CSAPG; l’eina no la converteix en una puntuació oficial.', tieGeneral:'Si hi ha empat en la puntuació total, preval la major antiguitat al CSAPG; si també empata l’antiguitat, s’utilitza la puntuació de formació sense límit.',
       routeFull:'Barem complet', routeSeniority:'Ordre per antiguitat', routeUnsupported:'No automatitzable amb precisió', routeSeniorityText:'Per canvi de torn/servei en àrees comunes, el protocol indica que merita exclusivament l’antiguitat al CSAPG. En cas d’empat s’utilitza la puntuació de formació sense límit establert.', routeFullText:'S’aplicarà el barem específic d’antiguitat/experiència i formació, recerca i docència corresponent a aquesta ruta.', routeG22Other:'El procediment no fixa un barem numèric separat per a la resta de categories del Grup 2.2: l’apartat 4.2.2 anomena expressament infermeria i fisioteràpia. L’eina no inventarà aquest criteri.', sourceSection:'Apartat',
