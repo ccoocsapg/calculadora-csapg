@@ -439,9 +439,9 @@ button{cursor:pointer}
         ['other', 'Altres professionals Grup 1.2']
       ],
       services: {
-        physician: [['general', 'Lloc de treball convocat']],
-        pharmacist: [['general', 'Lloc de treball convocat']],
-        other: [['general', 'Lloc de treball convocat']]
+        physician: [['common', 'Àrea comuna'], ['special', 'Àrea especial/específica']],
+        pharmacist: [['common', 'Àrea comuna'], ['special', 'Àrea especial/específica']],
+        other: [['common', 'Àrea comuna'], ['special', 'Àrea especial/específica']]
       }
     },
     g22: {
@@ -665,6 +665,7 @@ button{cursor:pointer}
     // en caso de empate, formación sin límite. Las áreas especiales/normativas aplican su baremo específico.
     if (process === 'shift') {
       const commonShift =
+        (group === 'g12' && service === 'common') ||
         (group === 'g22' && isG22Common(category, service)) ||
         (group === 'g3' && !isG3Special(category, service)) ||
         group === 'g4567';
@@ -846,7 +847,7 @@ button{cursor:pointer}
     g4:{es:'Grupo 4',ca:'Grup 4'},g5:{es:'Grupo 5',ca:'Grup 5'},g6:{es:'Grupo 6',ca:'Grup 6'},g7:{es:'Grupo 7 (excepto portalliteres)',ca:'Grup 7 (excepte portalliteres)'}
   };
   const serviceLabels = {
-    general:{es:'Puesto de trabajo convocado',ca:'Lloc de treball convocat'},common:{es:'Área común / otros servicios',ca:'Àrea comuna / altres serveis'},icu:{es:'UCI',ca:'UCI'},or:{es:'Bloque quirúrgico',ca:'Bloc quirúrgic'},pediatrics:{es:'Pediatría',ca:'Pediatria'},geriatrics:{es:'Geriatría',ca:'Geriatria'},sem:{es:'SEM',ca:'SEM'},occupational:{es:'Enfermería del trabajo',ca:'Infermeria del treball'},bloodbank:{es:'Banco de sangre',ca:'Banc de sang'},radiology:{es:'Radiología',ca:'Radiologia'},midwife:{es:'Matrona · requisito normativo',ca:'Llevador/a · requisit normatiu'},neurology:{es:'Neurología',ca:'Neurologia'},other:{es:'Puesto de trabajo convocado',ca:'Lloc de treball convocat'}
+    general:{es:'Puesto de trabajo convocado',ca:'Lloc de treball convocat'},common:{es:'Área común / otros servicios',ca:'Àrea comuna / altres serveis'},special:{es:'Área especial/específica según convocatoria',ca:'Àrea especial/específica segons convocatòria'},icu:{es:'UCI',ca:'UCI'},or:{es:'Bloque quirúrgico',ca:'Bloc quirúrgic'},pediatrics:{es:'Pediatría',ca:'Pediatria'},geriatrics:{es:'Geriatría',ca:'Geriatria'},sem:{es:'SEM',ca:'SEM'},occupational:{es:'Enfermería del trabajo',ca:'Infermeria del treball'},bloodbank:{es:'Banco de sangre',ca:'Banc de sang'},radiology:{es:'Radiología',ca:'Radiologia'},midwife:{es:'Matrona · requisito normativo',ca:'Llevador/a · requisit normatiu'},neurology:{es:'Neurología',ca:'Neurologia'},other:{es:'Puesto de trabajo convocado',ca:'Lloc de treball convocat'}
   };
 
   function tr(key){ return T[state.lang][key] ?? T.es[key] ?? key; }
@@ -893,7 +894,8 @@ button{cursor:pointer}
   function populateService(){
     const {group,category}=currentSelection();
     const prev=$('#service').value; $('#service').innerHTML=`<option value="">${esc(tr('selectOption'))}</option>`;
-    const services=P.groupData[group]?.services?.[category]||[];
+    let services=P.groupData[group]?.services?.[category]||[];
+    if(group==='g12' && $('#process').value!=='shift') services=[['general','Lloc de treball convocat']];
     services.forEach(([value])=>{const o=document.createElement('option');o.value=value;o.textContent=serviceLabels[value]?.[state.lang]||value;$('#service').appendChild(o);});
     if ([...$('#service').options].some(o=>o.value===prev)) $('#service').value=prev;
     if (!$('#service').value && $('#service').options.length===2) $('#service').selectedIndex=1;
