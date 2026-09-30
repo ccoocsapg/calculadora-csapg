@@ -1030,7 +1030,13 @@ button{cursor:pointer}
 
   function academicConfig(r){ return r?.academics || r?.meritBase?.academics || []; }
   function refreshAcademicOptions(r=route()){
-    const list=academicConfig(r); $$('.academic-item').forEach(item=>{const sel=$('[data-field="type"]',item),prev=sel.value;sel.innerHTML='';list.forEach(a=>{const o=document.createElement('option');o.value=a.value;o.textContent=a[state.lang]||a.es;sel.appendChild(o);});if([...sel.options].some(o=>o.value===prev))sel.value=prev; $('.academic-specific-field',item).hidden=!list.some(a=>a.specificPoints && a.specificPoints!==a.points);});
+    let list=academicConfig(r);
+    const sel0=currentSelection();
+    if(sel0.group==='g3' && sel0.category==='g32') list=list.filter(a=>a.value!=='fpMediumHealth');
+    $('.academic-item').forEach(item=>{const sel=$('[data-field="type"]',item),prev=sel.value;sel.innerHTML='';list.forEach(a=>{const o=document.createElement('option');o.value=a.value;o.textContent=a[state.lang]||a.es;sel.appendChild(o);});if([...sel.options].some(o=>o.value===prev))sel.value=prev;
+      $('.academic-specific-field',item).hidden=!list.some(a=>a.specificPoints && a.specificPoints!==a.points);
+      const levelField=$('.academic-level-field',item); if(levelField) levelField.hidden=!['g3','g4567'].includes(sel0.group);
+    });
   }
 
   function addCourse(){const f=$('#courseTemplate').content.cloneNode(true),item=$('.course-item',f);$('#coursesList').appendChild(f);bindDynamicItem($('#coursesList').lastElementChild);updateTemplatesLanguage();updateDynamicCalculations();}
@@ -1045,28 +1051,76 @@ button{cursor:pointer}
   function courseResult(item,r){
     const name=$('[data-field="name"]',item).value.trim()||tr('emptyCourse');
     const hours=num($('[data-field="hours"]',item).value),ects=num($('[data-field="ects"]',item).value),cfc=num($('[data-field="cfc"]',item).value),days=num($('[data-field="days"]',item).value);
-    let h=0,conversion=''; if(hours>0){h=hours;conversion=`${fmt(h,1)} h`;} else if(ects>0){h=ects*25;conversion=`${fmt(ects,2)} ECTS × 25 = ${fmt(h,1)} h`;} else if(cfc>0){h=cfc*10;conversion=`${fmt(cfc,2)} CFC × 10 = ${fmt(h,1)} h`;} else if(days>0){h=days*3;conversion=`${fmt(days,0)} × 3 h/día = ${fmt(h,1)} h`;}
+    const pending=[]; let excludedReason='',h=0,conversion='';
+    if(hours>0){h=hours;conversion=`${fmt(h,1)} h`;}
+    else if(ects>0 && cfc>0){pending.push(tr('creditsConflict'));}
+    else if(ects>0){h=ects*25;conversion=`${fmt(ects,2)} ECTS × 25 = ${fmt(h,1)} h`;}
+    else if(cfc>0){h=cfc*10;conversion=`${fmt(cfc,2)} CFC × 10 = ${fmt(h,1)} h`;}
+    else if(days>0){h=days*3;conversion=`${fmt(days,0)} × 3 h/día = ${fmt(h,1)} h`;}
+
     const modality=$('[data-field="modality"]',item).value==='onsite'?'onsite':'online';
-    const spec=$('[data-field="specific"]',item).value; const rates=r.courseRates;
-    const baseRate=modality==='onsite'?rates.onsite:rates.online; const highRate=modality==='onsite'?(rates.specificOnsite??baseRate):(rates.specificOnline??baseRate);
-    const lowRate=baseRate; let secureRate=spec==='yes'?highRate:lowRate,possibleRate=spec==='unknown'?highRate:secureRate; if(spec==='no')possibleRate=secureRate;
-    let secure=h*secureRate,possible=h*possibleRate; const pending=[]; let excludedReason='';
-    if(h<=0){secure=0;possible=0;pending.push(tr('hoursMissing'));}
-    const cut=cutoffStatus($('[data-field="date"]',item).value); if(cut==='late'){secure=possible=0;excludedReason=tr('afterCutoff');} else if(cut==='missing'){secure=0;pending.push(tr('dateMissing'));}
-    const before=$('[data-field="beforeTitle"]',item).value; if(before==='yes'){secure=possible=0;excludedReason=tr('beforeTitleNoPoints');} else if(before==='yes-compatible' && possible>0){secure=0;pending.push(tr('beforeTitlePending'));}
-    if(spec==='unknown' && highRate>lowRate && possible>secure)pending.push(tr('specificityPending'));
-    return {name,h,conversion,secure,possible,pending,excludedReason,section:r.meritsSection,rateSecure:secureRate,ratePossible:possibleRate};
+    const spec=$('[data-field="specific"]',item).value;
+    const rates=r.courseRates,baseRate=modality==='onsite'?rates.onsite:rates.online;
+    const highRate=modality==='onsite'?(rates.specificOnsite??baseRate):(rates.specificOnline??baseRate);
+
+    let secureRate=baseRate,possibleRate=baseRate;
+    if(spec==='yes' && highRate>baseRate){possibleRate=highRate;pending.push(tr('specificityPending'));}
+    else if(spec==='unknown'){secureRate=0;possibleRate=highRate;pending.push(tr('relationPending'));}
+
+    let secure=h*secureRate,possible=h*possibleRate;
+    if(spec==='unrelated'){secure=possible=0;excludedReason=tr('unrelatedExcluded');}
+    if(h<=0 && !pending.includes(tr('creditsConflict'))){secure=possible=0;pending.push(tr('hoursMissing'));}
+
+    const provider=$('[data-field="provider"]',item)?.value||'unknown';
+    if(provider==='no'){secure=possible=0;excludedReason=tr('providerNo');}
+    else if(provider==='unknown' && possible>0){secure=0;pending.push(tr('providerPending'));}
+
+    if(!$('[data-field="documented"]',item)?.checked && possible>0){secure=0;pending.push(tr('documentationPending'));}
+    if($('[data-field="practice"]',item)?.checked){secure=possible=0;excludedReason=tr('practiceExcluded');}
+
+    const cut=cutoffStatus($('[data-field="date"]',item).value);
+    if(cut==='late'){secure=possible=0;excludedReason=tr('afterCutoff');}
+    else if(cut==='missing' && possible>0){secure=0;pending.push(tr('dateMissing'));}
+
+    const before=$('[data-field="beforeTitle"]',item).value;
+    if(before==='yes'){secure=possible=0;excludedReason=tr('beforeTitleNoPoints');}
+    else if(before==='yes-compatible' && possible>0){secure=0;pending.push(tr('beforeTitlePending'));}
+
+    return {name,h,conversion,secure,possible,pending:[...new Set(pending)],excludedReason,section:r.meritsSection,rateSecure:secureRate,ratePossible:possibleRate};
   }
 
   function academicResult(item,r){
-    const name=$('[data-field="name"]',item).value.trim()||tr('emptyAcademic'),type=$('[data-field="type"]',item).value,def=academicConfig(r).find(x=>x.value===type); if(!def)return{name,secure:0,possible:0,pending:[tr('emptyAcademic')],section:r.meritsSection};
-    let base=def.points,high=def.specificPoints??base; const spec=$('[data-field="specific"]',item)?.value||'no'; let secure=spec==='yes'?high:base,possible=spec==='unknown'?high:secure; const pending=[]; let excludedReason='';
+    const name=$('[data-field="name"]',item).value.trim()||tr('emptyAcademic'),type=$('[data-field="type"]',item).value,def=academicConfig(r).find(x=>x.value===type);
+    if(!def)return{name,secure:0,possible:0,pending:[tr('emptyAcademic')],section:r.meritsSection};
+    let base=def.points,high=def.specificPoints??base;
+    const spec=$('[data-field="specific"]',item)?.value||'no';
+    let secure=base,possible=base; const pending=[]; let excludedReason='';
+    if(spec==='yes' && high>base){possible=high;pending.push(tr('specificityPending'));}
+    else if(spec==='unknown' && high>base){possible=high;pending.push(tr('specificityPending'));}
+
     if($('[data-field="required"]',item).checked){secure=possible=0;excludedReason=tr('requiredNoPoints');}
-    const hours=num($('[data-field="hours"]',item).value),ects=num($('[data-field="ects"]',item).value); const duration=hours>0?hours:ects>0?ects*25:0;
-    if(def.minHours && !excludedReason){if(duration===0){secure=0;pending.push(`${tr('minDurationMissing')} (${def.minHours} h)`);} else if(duration<def.minHours){secure=possible=0;excludedReason=`${tr('belowMin')} (${def.minHours} h)`;}}
-    const cut=cutoffStatus($('[data-field="date"]',item).value); if(cut==='late'){secure=possible=0;excludedReason=tr('afterCutoff');} else if(cut==='missing'&&!excludedReason){secure=0;pending.push(tr('dateMissing'));}
-    if(spec==='unknown'&&high>base&&possible>secure)pending.push(tr('specificityPending'));
-    return{name,secure,possible,pending,excludedReason,section:r.meritsSection,duration,def};
+
+    const provider=$('[data-field="provider"]',item)?.value||'unknown';
+    if(provider==='no'){secure=possible=0;excludedReason=tr('providerNo');}
+    else if(provider==='unknown' && possible>0){secure=0;pending.push(tr('providerPending'));}
+
+    if(!$('[data-field="documented"]',item)?.checked && possible>0){secure=0;pending.push(tr('documentationPending'));}
+
+    const needsLevel=['g3','g4567'].includes(currentSelection().group);
+    if(needsLevel && !$('[data-field="levelEligible"]',item)?.checked && possible>0){secure=0;pending.push(tr('levelPending'));}
+
+    const hours=num($('[data-field="hours"]',item).value),ects=num($('[data-field="ects"]',item).value);
+    const duration=hours>0?hours:ects>0?ects*25:0;
+    if(def.minHours && !excludedReason){
+      if(duration===0){secure=0;pending.push(`${tr('minDurationMissing')} (${def.minHours} h)`);}
+      else if(duration<def.minHours){secure=possible=0;excludedReason=`${tr('belowMin')} (${def.minHours} h)`;}
+    }
+
+    const cut=cutoffStatus($('[data-field="date"]',item).value);
+    if(cut==='late'){secure=possible=0;excludedReason=tr('afterCutoff');}
+    else if(cut==='missing'&&!excludedReason&&possible>0){secure=0;pending.push(tr('dateMissing'));}
+
+    return{name,secure,possible,pending:[...new Set(pending)],excludedReason,section:r.meritsSection,duration,def};
   }
 
   function certificatesResult(){
