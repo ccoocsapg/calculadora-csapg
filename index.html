@@ -1020,11 +1020,13 @@ button{cursor:pointer}
   function academicHelpForMeritBase(base){if(!base)return'academicHelpG4567';return base.key==='g12'?'academicHelpG12':base.key==='g22special'?'academicHelpG22Special':base.key==='g22common'?'academicHelpG22Common':base.key.startsWith('g3')?'academicHelpG3':'academicHelpG4567';}
 
   function renderActivityFields(r){
-    const c=$('#activityFields'), old={}; $$('input[data-act]',c).forEach(i=>old[i.dataset.act]=i.value); c.innerHTML='';
+    const c=$('#activityFields'), old={}, oldDoc=$('#activitiesDocumented',c)?.checked||false;
+    $$('input[data-act]',c).forEach(i=>old[i.dataset.act]=i.value); c.innerHTML='';
     const add=(key,label,rate)=>{const d=document.createElement('label');d.className='field';d.innerHTML=`<span>${esc(tr(label))} · ${rate} ${esc(tr('points'))}</span><input data-act="${key}" type="number" min="0" step="1" value="${esc(old[key]||0)}"><small>${esc(tr('activitiesYears'))}</small>`;c.appendChild(d);};
     if(r.teachingMode==='g12'){add('research','research',0.3);add('tutor','tutorResidents',1);add('coord','coordinatorResidents',0.5);add('practices','practices',0.3);add('onboarding','onboarding',0.3);add('continuing','continuingTeaching',0.3);}
     else if(r.teachingMode==='specific06'){add('researchSpecific','researchSpecific',0.6);add('researchBase','researchNonSpecific',0.3);add('teachingSpecific','teachingSpecific',0.6);add('teachingBase','teachingNonSpecific',0.3);}
     else {add('research','research',0.3);add('teaching','teaching',0.3);}
+    const chk=document.createElement('label'); chk.className='check-row field--span2'; chk.innerHTML=`<input id="activitiesDocumented" type="checkbox" ${oldDoc?'checked':''}><span>${esc(tr('documented'))}</span>`; c.appendChild(chk);
     $$('input',c).forEach(i=>i.addEventListener('input',updateDynamicCalculations));
   }
 
@@ -1128,11 +1130,27 @@ button{cursor:pointer}
   }
 
   function activitiesResult(r){
-    const get=k=>num($(`[data-act="${k}"]`)?.value); let research=0,teaching=0;
-    if(r.teachingMode==='g12'){research=get('research')*.3;teaching=get('tutor')*1+get('coord')*.5+get('practices')*.3+get('onboarding')*.3+get('continuing')*.3;}
-    else if(r.teachingMode==='specific06'){research=get('researchSpecific')*.6+get('researchBase')*.3;teaching=get('teachingSpecific')*.6+get('teachingBase')*.3;}
-    else {research=get('research')*.3;teaching=get('teaching')*.3;}
-    return{research,teaching,total:research+teaching};
+    const get=k=>num($(`[data-act="${k}"]`)?.value), documented=$('#activitiesDocumented')?.checked||false;
+    let researchSecure=0,researchPossible=0,teachingSecure=0,teachingPossible=0; const pending=[];
+    if(r.teachingMode==='g12'){
+      researchPossible=get('research')*.3;
+      teachingPossible=get('tutor')*1+get('coord')*.5+get('practices')*.3+get('onboarding')*.3+get('continuing')*.3;
+      researchSecure=researchPossible; teachingSecure=teachingPossible;
+    } else if(r.teachingMode==='specific06'){
+      researchSecure=(get('researchSpecific')+get('researchBase'))*.3;
+      researchPossible=get('researchSpecific')*.6+get('researchBase')*.3;
+      teachingSecure=(get('teachingSpecific')+get('teachingBase'))*.3;
+      teachingPossible=get('teachingSpecific')*.6+get('teachingBase')*.3;
+      if(researchPossible>researchSecure || teachingPossible>teachingSecure) pending.push({name:tr('researchTeachingTitle'),text:tr('specificityPending')});
+    } else {
+      researchPossible=get('research')*.3; teachingPossible=get('teaching')*.3;
+      researchSecure=researchPossible; teachingSecure=teachingPossible;
+    }
+    if(!documented && (researchPossible+teachingPossible)>0){
+      researchSecure=0; teachingSecure=0;
+      pending.push({name:tr('researchTeachingTitle'),text:tr('documentationPending')});
+    }
+    return{research:researchSecure,researchPossible,teaching:teachingSecure,teachingPossible,secure:researchSecure+teachingSecure,possible:researchPossible+teachingPossible,pending};
   }
 
   function meritsScores(){
@@ -1140,9 +1158,9 @@ button{cursor:pointer}
     const courses=$$('.course-item').map(i=>courseResult(i,r)); const academics=$$('.academic-item').map(i=>academicResult(i,r)); const certs=certificatesResult(),acts=activitiesResult(r);
     const courseSecure=courses.reduce((s,x)=>s+x.secure,0),coursePossible=courses.reduce((s,x)=>s+x.possible,0),academicSecure=academics.reduce((s,x)=>s+x.secure,0),academicPossible=academics.reduce((s,x)=>s+x.possible,0);
     const formationSecureRaw=courseSecure+academicSecure+certs.total,formationPossibleRaw=coursePossible+academicPossible+certs.total;
-    const secureRaw=formationSecureRaw+acts.total,possibleRaw=formationPossibleRaw+acts.total;
+    const secureRaw=formationSecureRaw+acts.secure,possibleRaw=formationPossibleRaw+acts.possible;
     const secure=clamp(secureRaw,r.meritsMax),possible=clamp(possibleRaw,r.meritsMax);
-    return{courses,academics,certs,acts,formationSecureRaw,formationPossibleRaw,secureRaw,possibleRaw,secure,possible,pending:[...courses,...academics].flatMap(x=>x.pending.map(p=>({name:x.name,text:p}))) };
+    return{courses,academics,certs,acts,formationSecureRaw,formationPossibleRaw,secureRaw,possibleRaw,secure,possible,pending:[...courses,...academics].flatMap(x=>x.pending.map(p=>({name:x.name,text:p}))).concat(acts.pending||[]) };
   }
 
   function updateDynamicCalculations(){
@@ -1178,7 +1196,7 @@ button{cursor:pointer}
   function literalWarningHtml(r){return r.literalRateWarning?`<div class="notice notice--warning"><div><strong>${esc(tr('literalRateTitle'))}</strong><br><span>${esc(tr('literalRateText'))}</span></div></div>`:'';}
   function traceHtml(r,exp,m){
     const rows=[]; rows.push([tr('seniority'),`${fmt(exp.seniority.secure)} ${tr('points')}`,r.expSection]); if(r.categoryExp)rows.push([tr('categoryExperience'),`${fmt(exp.category.secure)}${exp.category.possible>exp.category.secure?`–${fmt(exp.category.possible)}`:''}`,r.expSection]); if(r.serviceExp)rows.push([tr('serviceExperience'),`${fmt(exp.service.secure)}${exp.service.possible>exp.service.secure?`–${fmt(exp.service.possible)}`:''}`,r.expSection]);
-    m.courses.forEach(x=>rows.push([`${tr('courseRule')}: ${x.name}`,`${fmt(x.secure)}${x.possible>x.secure?`–${fmt(x.possible)}`:''}`,r.meritsSection])); m.academics.forEach(x=>rows.push([`${tr('academicRule')}: ${x.name}`,`${fmt(x.secure)}${x.possible>x.secure?`–${fmt(x.possible)}`:''}`,r.meritsSection])); if(m.certs.actic)rows.push([tr('acticRule'),fmt(m.certs.actic),r.meritsSection]); if(m.certs.catalan)rows.push([tr('catalanRule'),fmt(m.certs.catalan),r.meritsSection]); if(m.certs.other)rows.push([tr('languagesRule'),fmt(m.certs.other),r.meritsSection]); if(m.acts.research)rows.push([tr('researchRule'),fmt(m.acts.research),r.meritsSection]); if(m.acts.teaching)rows.push([tr('teachingRule'),fmt(m.acts.teaching),r.meritsSection]);
+    m.courses.forEach(x=>rows.push([`${tr('courseRule')}: ${x.name}`,`${fmt(x.secure)}${x.possible>x.secure?`–${fmt(x.possible)}`:''}`,r.meritsSection])); m.academics.forEach(x=>rows.push([`${tr('academicRule')}: ${x.name}`,`${fmt(x.secure)}${x.possible>x.secure?`–${fmt(x.possible)}`:''}`,r.meritsSection])); if(m.certs.actic)rows.push([tr('acticRule'),fmt(m.certs.actic),r.meritsSection]); if(m.certs.catalan)rows.push([tr('catalanRule'),fmt(m.certs.catalan),r.meritsSection]); if(m.certs.other)rows.push([tr('languagesRule'),fmt(m.certs.other),r.meritsSection]); if(m.acts.researchPossible)rows.push([tr('researchRule'),m.acts.researchPossible>m.acts.research?`${fmt(m.acts.research)}–${fmt(m.acts.researchPossible)}`:fmt(m.acts.research),r.meritsSection]); if(m.acts.teachingPossible)rows.push([tr('teachingRule'),m.acts.teachingPossible>m.acts.teaching?`${fmt(m.acts.teaching)}–${fmt(m.acts.teachingPossible)}`:fmt(m.acts.teaching),r.meritsSection]);
     return `<div class="result-card pending-box"><h4>${esc(tr('traceability'))}</h4><div class="trace-list">${rows.map(([n,v,s])=>`<div class="trace-item"><b>${esc(n)} · ${esc(v)} ${esc(tr('points'))}</b><span><span class="tag tag--source">§ ${esc(s)}</span></span></div>`).join('')}</div></div>`;
   }
   function disclaimerHtml(){return `<div class="notice notice--warning pending-box"><div><strong>${esc(tr('disclaimerTitle'))}</strong><br><span>${esc(tr('disclaimerText'))}</span></div></div>`;}
