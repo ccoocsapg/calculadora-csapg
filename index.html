@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Calculadora orientativa de puntuación para convocatorias internas del CSAPG basada en el Procediment de convocatòries internes CSAPG, ID 6455, versión 1.0 de 10/12/2025." />
+  <meta name="theme-color" content="#b00020" />
+  <title>Calculadora CSAPG · Convocatorias internas</title>
+  <style>
+:root {
+  --red: #b00020;
+  --red-2: #d71920;
+  --red-soft: #fff1f3;
+  --ink: #1c1f24;
+  --muted: #626973;
+  --line: #dfe3e8;
+  --panel: #ffffff;
+  --bg: #f6f7f9;
+  --green: #177245;
+  --green-soft: #edf8f2;
+  --amber: #9a5a00;
+  --amber-soft: #fff7e6;
+  --blue: #245f9e;
+  --blue-soft: #edf5fd;
+  --shadow: 0 18px 45px rgba(22, 28, 38, .08);
+  --radius: 18px;
+  --max: 1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.skip-link{position:absolute;left:-9999px;top:0;background:#000;color:#fff;padding:.75rem 1rem;z-index:9999}.skip-link:focus{left:1rem;top:1rem}
+.shell,.topbar__inner,.hero{width:min(calc(100% - 32px),var(--max));margin-inline:auto}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar__inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px}.brand__mark{background:var(--red);color:#fff;font-weight:900;letter-spacing:-.04em;padding:8px 10px;border-radius:8px}.brand__name{font-weight:800;line-height:1}.brand__sub{font-size:.78rem;color:var(--muted);margin-top:3px}.topbar__actions{display:flex;align-items:center;gap:10px}.protocol-chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;color:var(--ink);font-weight:700;font-size:.82rem}.status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft)}.lang-switch{display:flex;border:1px solid var(--line);border-radius:10px;padding:3px;background:#fff}.lang-btn{border:0;background:transparent;border-radius:7px;padding:6px 9px;font-weight:800;color:var(--muted)}.lang-btn.is-active{background:var(--ink);color:#fff}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.65fr);gap:40px;padding:64px 0 52px;align-items:center}.hero__content{max-width:800px}.eyebrow{font-size:.76rem;letter-spacing:.14em;font-weight:900;color:var(--red);text-transform:uppercase;margin-bottom:10px}.hero h1{font-size:clamp(2.2rem,5vw,4.5rem);line-height:1.02;letter-spacing:-.05em;margin:0 0 20px}.hero__lead{font-size:clamp(1rem,2vw,1.25rem);color:#414750;max-width:760px}.source-lock{display:flex;align-items:flex-start;gap:12px;border:1px solid #efb6bf;background:var(--red-soft);padding:15px 16px;border-radius:14px;margin-top:22px}.source-lock svg{width:24px;fill:var(--red);flex:none}.source-lock strong,.source-lock span{display:block}.source-lock span{font-size:.9rem;color:#5a3a3f;margin-top:2px}.hero__actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}.hero__aside{background:var(--ink);color:#fff;border-radius:24px;padding:26px;box-shadow:var(--shadow)}.hero-stat{padding:15px 0;border-bottom:1px solid rgba(255,255,255,.13)}.hero-stat:first-child{padding-top:0}.hero-stat__value,.hero-stat__label{display:block}.hero-stat__value{font-size:1.45rem;font-weight:900}.hero-stat__label{font-size:.9rem;color:#cbd0d6;margin-top:2px}.privacy-note{font-size:.82rem;color:#aeb5be;margin:18px 0 0}
+.btn{border-radius:11px;border:1px solid transparent;padding:11px 15px;font-weight:800;transition:.2s transform,.2s background,.2s border-color}.btn:hover{transform:translateY(-1px)}.btn--primary{background:var(--red);color:#fff}.btn--primary:hover{background:#910019}.btn--ghost{background:#fff;border-color:var(--line);color:var(--ink)}.btn--outline{background:#fff;border-color:#cfd4db;color:var(--ink)}.btn--lg{padding:14px 18px;font-size:1rem}.btn--small{padding:8px 10px;font-size:.85rem}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.calculator{padding:28px 0 72px}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}.section-heading h2{font-size:clamp(1.7rem,3vw,2.5rem);margin:0;letter-spacing:-.035em}.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 18px}.step{border:1px solid var(--line);background:#fff;padding:10px;border-radius:12px;display:flex;align-items:center;gap:9px;text-align:left;color:var(--muted)}.step span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#edf0f3;font-size:.82rem;font-weight:900}.step b{font-size:.86rem}.step.is-active{border-color:#ebb0ba;background:var(--red-soft);color:var(--red)}.step.is-active span{background:var(--red);color:#fff}.step.is-done{color:var(--green);border-color:#bfdfcf}.step.is-done span{background:var(--green-soft);color:var(--green)}
+.step-panel{display:none;background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:var(--shadow)}.step-panel.is-active{display:block}.card{background:#f8f9fb;border:1px solid #e8ebef;padding:18px;border-radius:14px;margin-bottom:22px}.card--accent{background:linear-gradient(135deg,#fff7f8,#fff);border-color:#f1c2c9}.card h3{margin:0 0 6px;font-size:1.05rem}.card p{margin:0;color:var(--muted)}
+.form-grid{display:grid;gap:16px}.form-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}.form-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}.field{display:flex;flex-direction:column;gap:7px;min-width:0}.field>span{font-weight:800;font-size:.88rem}.field small{color:var(--muted);font-size:.78rem}.field input,.field select{width:100%;border:1px solid #cfd4db;border-radius:10px;background:#fff;padding:11px 12px;color:var(--ink);min-height:44px}.field input:focus,.field select:focus{outline:3px solid rgba(176,0,32,.12);border-color:var(--red)}.field--span2{grid-column:span 2}.check-row{display:flex;align-items:flex-start;gap:10px;border:1px solid #e2e5e9;padding:12px;border-radius:10px;background:#fafbfc;font-size:.9rem}.check-row input{margin-top:3px;accent-color:var(--red)}
+.route-preview{margin-top:20px}.route-box{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:flex-start;background:#f7f8fa;border:1px solid var(--line);padding:16px;border-radius:14px}.route-box__badge{font-size:.74rem;font-weight:900;color:#fff;background:var(--ink);border-radius:999px;padding:5px 9px;white-space:nowrap}.route-box h4{margin:0 0 4px}.route-box p{margin:0;color:var(--muted);font-size:.9rem}.route-box small{display:block;color:#777f89;margin-top:6px}.route-box--warning{background:var(--amber-soft);border-color:#edcf94}.route-box--warning .route-box__badge{background:var(--amber)}
+.eligibility{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}.eligibility summary{cursor:pointer;font-weight:900;color:#363b42}.eligibility__body{padding-top:15px}.eligibility__body>p{color:var(--muted);margin-top:0}.inline-result{margin-top:16px}.panel-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:22px;margin-top:26px}.panel-actions--results{align-items:flex-end}.results-actions{display:flex;gap:10px;flex-wrap:wrap}
+.score-input-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.score-input-card{border:1px solid var(--line);border-radius:15px;padding:16px;background:#fff}.score-input-card__head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.score-input-card h4{margin:0;font-size:.95rem}.mini-score{font-weight:900;color:var(--red);background:var(--red-soft);border-radius:999px;padding:4px 8px;font-size:.8rem;white-space:nowrap}.years-months{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.score-input-card small{display:block;color:var(--muted)}
+.notice{display:flex;gap:9px;align-items:flex-start;padding:13px 15px;border-radius:12px;font-size:.88rem;margin:16px 0}.notice--info{background:var(--blue-soft);color:#244f7e;border:1px solid #c7ddf4}.notice--warning{background:var(--amber-soft);color:#744600;border:1px solid #edd197}.notice--success{background:var(--green-soft);color:#125c39;border:1px solid #c0e0ce}.notice--danger{background:#fff0f0;color:#8d1d1d;border:1px solid #efc0c0}
+.merit-section{padding:4px 0 26px;border-bottom:1px solid var(--line);margin-bottom:24px}.merit-section:last-child{border-bottom:0;margin-bottom:0}.merit-section__head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:6px}.merit-section__head>div{display:flex;align-items:center;gap:10px}.merit-section h3{margin:0;font-size:1.08rem}.section-number{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--ink);color:#fff;font-weight:900;font-size:.82rem}.section-help{color:var(--muted);font-size:.88rem;margin:0 0 14px}.dynamic-list{display:grid;gap:12px}.dynamic-list--compact{margin-top:12px}.dynamic-item{border:1px solid #dfe3e8;border-radius:14px;padding:15px;background:#fbfcfd}.dynamic-item__top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.item-title{font-size:.92rem}.icon-btn{width:32px;height:32px;border:1px solid #d8dde2;border-radius:8px;background:#fff;font-size:1.1rem;line-height:1}.item-calc{font-size:.82rem;color:var(--muted);margin-top:10px;border-top:1px dashed #d9dde2;padding-top:9px}.language-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;padding:11px}.language-row .icon-btn{margin-bottom:6px}
+.result-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;background:linear-gradient(135deg,#1d2025,#292e35);color:#fff;border-radius:20px;padding:25px;margin-bottom:18px}.result-hero__score{text-align:right}.result-number{font-size:clamp(2.4rem,6vw,4.8rem);font-weight:950;letter-spacing:-.055em;line-height:.9}.result-number small{font-size:1rem;color:#bfc5cc;letter-spacing:0}.result-kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:#f1a7b3;font-weight:900}.result-hero h3{font-size:1.35rem;margin:5px 0}.result-hero p{color:#c8cdd3;margin:0;max-width:680px}.result-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.result-card{border:1px solid var(--line);border-radius:15px;padding:17px;background:#fff}.result-card h4{margin:0 0 12px}.breakdown{display:grid;gap:9px}.breakdown-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding-bottom:8px;border-bottom:1px solid #edf0f2}.breakdown-row:last-child{border-bottom:0;padding-bottom:0}.breakdown-row span{color:#4b515a;font-size:.9rem}.breakdown-row strong{font-variant-numeric:tabular-nums}.trace-list{display:grid;gap:8px}.trace-item{padding:10px 11px;border-radius:10px;background:#f7f8fa;font-size:.84rem}.trace-item b{display:block;margin-bottom:2px}.trace-item span{color:var(--muted)}.pending-box{margin-top:16px}.range-score{font-weight:900;color:var(--amber)}.tag{display:inline-flex;border-radius:999px;padding:3px 7px;font-size:.7rem;font-weight:900}.tag--secure{background:var(--green-soft);color:var(--green)}.tag--pending{background:var(--amber-soft);color:var(--amber)}.tag--source{background:#eef0f3;color:#555c65}.tiebreak-score{font-size:2rem;font-weight:950;color:var(--red)}
+.method{padding:10px 0 80px}.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.method-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}.method-card__icon{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--red-soft);color:var(--red);font-weight:950}.method-card h3{font-size:1rem;margin:13px 0 6px}.method-card p{font-size:.88rem;color:var(--muted);margin:0}.footer{border-top:1px solid var(--line);background:#fff}.footer__inner{display:flex;justify-content:space-between;gap:30px;padding:28px 0}.footer p{margin:3px 0 0;color:var(--muted);font-size:.83rem}.footer__protocol{text-align:right;display:flex;flex-direction:column;font-size:.82rem;color:var(--muted)}.footer__protocol strong{color:var(--ink)}
+.dialog{max-width:620px;width:calc(100% - 32px);border:0;border-radius:20px;padding:0;box-shadow:0 30px 80px rgba(0,0,0,.25)}.dialog::backdrop{background:rgba(20,22,27,.62);backdrop-filter:blur(3px)}.dialog form{padding:25px;position:relative}.dialog__close{position:absolute;right:16px;top:16px;border:0;background:#eef0f3;border-radius:50%;width:34px;height:34px;font-size:1.25rem}.dialog h2{margin:0 0 18px;letter-spacing:-.03em}.protocol-meta{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden}.protocol-meta>div{padding:11px;border-bottom:1px solid var(--line)}.protocol-meta>div:nth-child(odd){border-right:1px solid var(--line)}.protocol-meta>div:nth-last-child(-n+2){border-bottom:0}.protocol-meta dt{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.protocol-meta dd{margin:3px 0 0;font-weight:900}
+[hidden]{display:none!important}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:42px}.hero__aside{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.hero-stat{border:0;padding:0}.privacy-note{grid-column:1/-1;margin:0}.score-input-grid,.form-grid--3,.method-grid{grid-template-columns:1fr 1fr}.result-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.shell,.topbar__inner,.hero{width:min(calc(100% - 22px),var(--max))}.topbar__inner{min-height:64px}.brand__sub,.protocol-chip span:not(.status-dot){display:none}.hero{gap:24px;padding:34px 0}.hero h1{font-size:2.35rem}.hero__aside{grid-template-columns:1fr 1fr;padding:20px}.hero-stat:nth-child(3){grid-column:1/-1}.stepper{gap:4px}.step{justify-content:center;padding:8px 5px}.step b{display:none}.step-panel{padding:18px;border-radius:16px}.form-grid--2,.form-grid--3,.score-input-grid,.method-grid{grid-template-columns:1fr}.field--span2{grid-column:auto}.merit-section__head{align-items:flex-start}.result-hero{grid-template-columns:1fr}.result-hero__score{text-align:left}.panel-actions{align-items:stretch}.panel-actions--results{flex-direction:column}.results-actions{width:100%}.results-actions .btn{flex:1}.footer__inner{flex-direction:column}.footer__protocol{text-align:left}.protocol-meta{grid-template-columns:1fr}.protocol-meta>div:nth-child(odd){border-right:0}.protocol-meta>div:nth-last-child(-n+2){border-bottom:1px solid var(--line)}.protocol-meta>div:last-child{border-bottom:0}}
+@media print{.topbar,.hero,.stepper,.panel-actions,.method,.footer,.section-heading .btn{display:none!important}body{background:#fff}.calculator{padding:0}.step-panel{display:none!important;border:0;box-shadow:none;padding:0}.step-panel[data-step="4"]{display:block!important}.result-card,.result-hero{break-inside:avoid}.result-hero{color:#000;background:#fff;border:2px solid #222}.result-hero p,.result-kicker{color:#333}}
+
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand" aria-label="CCOO CSAPG">
+        <div class="brand__mark" aria-hidden="true">CCOO</div>
+        <div>
+          <div class="brand__name">CSAPG</div>
+          <div class="brand__sub" data-i18n="brandSub">Herramienta informativa</div>
+        </div>
+      </div>
+      <div class="topbar__actions">
+        <button id="protocolButton" class="protocol-chip" type="button" aria-haspopup="dialog">
+          <span class="status-dot"></span>
+          <span data-i18n="protocolChip">Protocolo ID 6455 · v1.0</span>
+        </button>
+        <div class="lang-switch" role="group" aria-label="Idioma">
+          <button type="button" class="lang-btn is-active" data-lang="es" aria-pressed="true">ES</button>
+          <button type="button" class="lang-btn" data-lang="ca" aria-pressed="false">CAT</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero__content">
+        <div class="eyebrow" data-i18n="eyebrow">CONVOCATORIAS INTERNAS · CSAPG</div>
+        <h1 data-i18n="heroTitle">Calcula tu puntuación con el baremo del protocolo vigente</h1>
+        <p class="hero__lead" data-i18n="heroLead">
+          Calculadora creada exclusivamente a partir del <strong>Procediment de convocatòries internes CSAPG</strong>,
+          ID 6455, versión 1.0, de 10/12/2025.
+        </p>
+        <div class="source-lock">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 0 1 6 0v3H9Zm3 4a2 2 0 0 1 1 3.73V19h-2v-1.27A2 2 0 0 1 12 14Z"/></svg>
+          <div>
+            <strong data-i18n="sourceLockTitle">Motor ligado al protocolo ID 6455</strong>
+            <span data-i18n="sourceLockText">No mezcla baremos de otros procedimientos. Las reglas dudosas se señalan, no se inventan.</span>
+          </div>
+        </div>
+        <div class="hero__actions">
+          <button id="startButton" class="btn btn--primary btn--lg" type="button" data-i18n="start">Empezar cálculo</button>
+          <button id="howButton" class="btn btn--ghost btn--lg" type="button" data-i18n="howWorks">Cómo calcula</button>
+        </div>
+      </div>
+      <aside class="hero__aside" aria-label="Resumen de garantías">
+        <div class="hero-stat">
+          <span class="hero-stat__value">ID 6455</span>
+          <span class="hero-stat__label" data-i18n="officialSource">Fuente única del cálculo</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__value">ES · CAT</span>
+          <span class="hero-stat__label" data-i18n="bilingual">Bilingüe</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__value">100%</span>
+          <span class="hero-stat__label" data-i18n="localCalc">Cálculo en tu navegador</span>
+        </div>
+        <p class="privacy-note" data-i18n="privacyNote">No se envían ni almacenan tus datos personales.</p>
+      </aside>
+    </section>
+
+    <section id="calculator" class="calculator shell" aria-labelledby="calculatorTitle">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow" data-i18n="calcEyebrow">CALCULADORA</div>
+          <h2 id="calculatorTitle" data-i18n="calcTitle">Tu expediente, paso a paso</h2>
+        </div>
+        <button id="resetButton" class="btn btn--small btn--ghost" type="button" data-i18n="reset">Reiniciar</button>
+      </div>
+
+      <nav class="stepper" aria-label="Pasos">
+        <button class="step is-active" data-step-target="1" type="button"><span>1</span><b data-i18n="step1">Convocatoria</b></button>
+        <button class="step" data-step-target="2" type="button"><span>2</span><b data-i18n="step2">Experiencia</b></button>
+        <button class="step" data-step-target="3" type="button"><span>3</span><b data-i18n="step3">Méritos</b></button>
+        <button class="step" data-step-target="4" type="button"><span>4</span><b data-i18n="step4">Resultado</b></button>
+      </nav>
+
+      <form id="scoreForm" novalidate>
+        <section class="step-panel is-active" data-step="1">
+          <div class="card card--accent">
+            <h3 data-i18n="sourceCardTitle">Primero: identifica qué baremo te corresponde</h3>
+            <p data-i18n="sourceCardText">El protocolo cambia la forma de puntuar según grupo profesional, tipo de convocatoria y, en algunos colectivos, área o servicio.</p>
+          </div>
+
+          <div class="form-grid form-grid--2">
+            <label class="field">
+              <span data-i18n="publicationDate">Fecha de publicación de la convocatoria</span>
+              <input id="publicationDate" name="publicationDate" type="date" />
+              <small data-i18n="publicationDateHelp">Se usa como fecha de corte: antigüedad/experiencia hasta el día anterior y formación finalizada antes de la convocatoria.</small>
+            </label>
+
+            <label class="field">
+              <span data-i18n="group">Grupo profesional</span>
+              <select id="group" name="group" required>
+                <option value="" data-i18n="selectOption">Selecciona…</option>
+                <option value="g12">Grupo 1.2</option>
+                <option value="g22">Grupo 2.2</option>
+                <option value="g3">Grupos 3.1 / 3.2 / 7.2 Portalliteres</option>
+                <option value="g4567">Grupos 4 / 5 / 6 / 7</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span data-i18n="processType">Tipo de convocatoria</span>
+              <select id="process" name="process" required>
+                <option value="" data-i18n="selectOption">Selecciona…</option>
+                <option value="shift" data-i18n="processShift">Cambio de turno / servicio</option>
+                <option value="increase" data-i18n="processIncrease">Incremento de jornada / consideración PB</option>
+                <option value="category" data-i18n="processCategory">Cambio de categoría</option>
+              </select>
+            </label>
+
+            <label class="field" id="categoryField">
+              <span data-i18n="category">Categoría / colectivo</span>
+              <select id="category" name="category">
+                <option value="" data-i18n="selectOption">Selecciona…</option>
+              </select>
+            </label>
+
+            <label class="field" id="serviceField">
+              <span data-i18n="serviceArea">Área / servicio de la plaza</span>
+              <select id="service" name="service">
+                <option value="" data-i18n="selectOption">Selecciona…</option>
+              </select>
+            </label>
+          </div>
+
+          <div id="routePreview" class="route-preview" aria-live="polite"></div>
+
+          <details class="eligibility">
+            <summary data-i18n="eligibilityTitle">Comprobar también requisitos de acceso</summary>
+            <div class="eligibility__body">
+              <p data-i18n="eligibilityIntro">Esta comprobación no modifica la puntuación: avisa si los datos introducidos no encajan con los requisitos previos del protocolo.</p>
+              <div class="form-grid form-grid--2">
+                <label class="check-row"><input id="isIndefinite" type="checkbox" checked /><span data-i18n="indefinite">Contrato laboral indefinido</span></label>
+                <label class="check-row"><input id="isActive" type="checkbox" checked /><span data-i18n="active">En activo en la fecha de publicación</span></label>
+                <label class="field">
+                  <span data-i18n="plantilla">Situación de plantilla</span>
+                  <select id="plantilla">
+                    <option value="PB">Plantilla Base (PB)</option>
+                    <option value="PC">Plantilla Complementaria (PC)</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span data-i18n="dedication">Dedicación contractual</span>
+                  <select id="dedication">
+                    <option value="100">100%</option>
+                    <option value="partial" data-i18n="partial">Tiempo parcial</option>
+                  </select>
+                </label>
+                <label class="check-row"><input id="sameCategory" type="checkbox" checked /><span data-i18n="sameCategory">Ya ostento la categoría de la plaza</span></label>
+                <label class="check-row"><input id="hasRequiredTitle" type="checkbox" checked /><span data-i18n="requiredTitle">Dispongo de titulación/requisitos legales de la plaza</span></label>
+              </div>
+              <div id="specificRequirements"></div>
+              <div id="eligibilityResult" class="inline-result" aria-live="polite"></div>
+            </div>
+          </details>
+
+          <div class="panel-actions">
+            <span></span>
+            <button class="btn btn--primary next-step" data-next="2" type="button" data-i18n="continue">Continuar</button>
+          </div>
+        </section>
+
+        <section class="step-panel" data-step="2">
+          <div class="card">
+            <h3 data-i18n="expTitle">Antigüedad y experiencia</h3>
+            <p data-i18n="expIntro">Introduce los periodos efectivos que consten o deban constar a fecha de corte. La antigüedad reconocida en nómina puntúa solo por años completos cuando el protocolo lo dice expresamente.</p>
+          </div>
+
+          <div class="score-input-grid">
+            <article class="score-input-card">
+              <div class="score-input-card__head"><h4 data-i18n="seniority">Antigüedad CSAPG reconocida en nómina</h4><span id="seniorityPoints" class="mini-score">0,00</span></div>
+              <div class="years-months">
+                <label class="field"><span data-i18n="years">Años</span><input id="seniorityYears" type="number" min="0" max="60" step="1" value="0" /></label>
+                <label class="field"><span data-i18n="months">Meses adicionales</span><input id="seniorityMonths" type="number" min="0" max="11" step="1" value="0" /></label>
+              </div>
+              <small id="seniorityRule"></small>
+            </article>
+
+            <article class="score-input-card" id="categoryExperienceCard">
+              <div class="score-input-card__head"><h4 data-i18n="categoryExperience">Experiencia en la categoría de la plaza dentro del CSAPG</h4><span id="categoryExpPoints" class="mini-score">0,00</span></div>
+              <div class="years-months">
+                <label class="field"><span data-i18n="years">Años</span><input id="categoryYears" type="number" min="0" max="60" step="1" value="0" /></label>
+                <label class="field"><span data-i18n="months">Meses adicionales</span><input id="categoryMonths" type="number" min="0" max="11" step="1" value="0" /></label>
+              </div>
+              <small id="categoryExpRule"></small>
+            </article>
+
+            <article class="score-input-card" id="serviceExperienceCard">
+              <div class="score-input-card__head"><h4 data-i18n="serviceExperience">Experiencia en la categoría dentro del servicio concreto</h4><span id="serviceExpPoints" class="mini-score">0,00</span></div>
+              <div class="years-months">
+                <label class="field"><span data-i18n="years">Años</span><input id="serviceYears" type="number" min="0" max="60" step="1" value="0" /></label>
+                <label class="field"><span data-i18n="months">Meses adicionales</span><input id="serviceMonths" type="number" min="0" max="11" step="1" value="0" /></label>
+              </div>
+              <small id="serviceExpRule"></small>
+            </article>
+          </div>
+
+          <div id="fractionWarning" class="notice notice--info" hidden></div>
+
+          <div class="panel-actions">
+            <button class="btn btn--ghost prev-step" data-prev="1" type="button" data-i18n="back">Atrás</button>
+            <button class="btn btn--primary next-step" data-next="3" type="button" data-i18n="continue">Continuar</button>
+          </div>
+        </section>
+
+        <section class="step-panel" data-step="3">
+          <div id="meritsNotApplicable" class="notice notice--info" hidden></div>
+
+          <div id="meritsContent">
+            <section class="merit-section">
+              <div class="merit-section__head">
+                <div><span class="section-number">A</span><h3 data-i18n="coursesTitle">Formación continuada</h3></div>
+                <button id="addCourse" class="btn btn--small btn--outline" type="button" data-i18n="addCourse">+ Añadir curso</button>
+              </div>
+              <p class="section-help" data-i18n="coursesHelp">Añade cada curso. La calculadora convierte ECTS, créditos CFC o días cuando corresponda y aplica presencial/online según el baremo de tu ruta.</p>
+              <div id="coursesList" class="dynamic-list"></div>
+            </section>
+
+            <section class="merit-section" id="academicSection">
+              <div class="merit-section__head">
+                <div><span class="section-number">B</span><h3 data-i18n="academicTitle">Formación académica / titulaciones adicionales</h3></div>
+                <button id="addAcademic" class="btn btn--small btn--outline" type="button" data-i18n="addAcademic">+ Añadir titulación</button>
+              </div>
+              <p id="academicHelp" class="section-help"></p>
+              <div id="academicList" class="dynamic-list"></div>
+            </section>
+
+            <section class="merit-section">
+              <div class="merit-section__head"><div><span class="section-number">C</span><h3 data-i18n="certsTitle">ACTIC e idiomas</h3></div></div>
+              <div class="form-grid form-grid--3">
+                <label class="field"><span>ACTIC</span><select id="actic"><option value="0" data-i18n="none">Ninguno</option><option value="0.3">Nivell 1 · 0,3</option><option value="0.7">Nivell 2 · 0,7</option><option value="1">Nivell 3 · 1,0</option></select></label>
+                <label class="field"><span data-i18n="catalan">Catalán</span><select id="catalan"><option value="0" data-i18n="none">Ninguno</option><option value="0.3">A1 · 0,3</option><option value="0.7">A2 · 0,7</option><option value="1">B1 · 1,0</option><option value="1.3">B2 · 1,3</option><option value="1.7">C1 · 1,7</option><option value="2">C2 · 2,0</option></select></label>
+                <div class="field"><span data-i18n="otherLanguages">Otros idiomas</span><button id="addLanguage" class="btn btn--small btn--outline" type="button" data-i18n="addLanguage">+ Añadir idioma</button><small data-i18n="languagesCap">Solo cuenta el nivel más alto de cada idioma; máximo total 1 punto.</small></div>
+              </div>
+              <div id="languagesList" class="dynamic-list dynamic-list--compact"></div>
+            </section>
+
+            <section class="merit-section">
+              <div class="merit-section__head"><div><span class="section-number">D</span><h3 data-i18n="researchTeachingTitle">Investigación y docencia</h3></div></div>
+              <p id="researchTeachingHelp" class="section-help"></p>
+              <div id="activityFields" class="form-grid form-grid--2"></div>
+            </section>
+          </div>
+
+          <div class="panel-actions">
+            <button class="btn btn--ghost prev-step" data-prev="2" type="button" data-i18n="back">Atrás</button>
+            <button class="btn btn--primary next-step" data-next="4" type="button" data-i18n="calculate">Calcular resultado</button>
+          </div>
+        </section>
+
+        <section class="step-panel" data-step="4">
+          <div id="results" aria-live="polite"></div>
+          <div class="panel-actions panel-actions--results">
+            <button class="btn btn--ghost prev-step" data-prev="3" type="button" data-i18n="editMerits">Editar méritos</button>
+            <div class="results-actions">
+              <button id="printButton" class="btn btn--outline" type="button" data-i18n="print">Imprimir / Guardar PDF</button>
+              <button id="newCalculation" class="btn btn--primary" type="button" data-i18n="newCalculation">Nuevo cálculo</button>
+            </div>
+          </div>
+        </section>
+      </form>
+    </section>
+
+    <section id="method" class="method shell">
+      <div class="section-heading">
+        <div><div class="eyebrow" data-i18n="methodEyebrow">TRANSPARENCIA</div><h2 data-i18n="methodTitle">Qué hace —y qué no hace— la calculadora</h2></div>
+      </div>
+      <div class="method-grid">
+        <article class="method-card"><span class="method-card__icon">✓</span><h3 data-i18n="method1Title">Aplica reglas literales</h3><p data-i18n="method1Text">Cuando el protocolo fija una equivalencia, un máximo o una puntuación concreta, se aplica tal cual.</p></article>
+        <article class="method-card"><span class="method-card__icon">?</span><h3 data-i18n="method2Title">Señala lo interpretable</h3><p data-i18n="method2Text">Si falta una duración mínima, no consta la especificidad o el texto no define un redondeo, el resultado lo marca como pendiente o sujeto a interpretación.</p></article>
+        <article class="method-card"><span class="method-card__icon">≠</span><h3 data-i18n="method3Title">No sustituye la valoración oficial</h3><p data-i18n="method3Text">La puntuación oficial es la que resulte del procedimiento y de la evaluación de los órganos previstos en él.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer__inner">
+      <div>
+        <strong>CCOO · CSAPG</strong>
+        <p data-i18n="footerPurpose">Herramienta informativa para revisar el baremo de convocatorias internas.</p>
+      </div>
+      <div class="footer__protocol">
+        <strong>Procediment de convocatòries internes CSAPG</strong>
+        <span>ID 6455 · versió 1.0 · 10/12/2025</span>
+        <span data-i18n="appVersion">Calculadora v0.1 · revisión 30/09/2026</span>
+      </div>
+    </div>
+  </footer>
+
+  <dialog id="protocolDialog" class="dialog">
+    <form method="dialog">
+      <button class="dialog__close" aria-label="Cerrar">×</button>
+      <div class="eyebrow" data-i18n="source">FUENTE</div>
+      <h2>Procediment de convocatòries internes CSAPG</h2>
+      <dl class="protocol-meta">
+        <div><dt>ID</dt><dd>6455</dd></div>
+        <div><dt data-i18n="version">Versión</dt><dd>1.0 (vigent)</dd></div>
+        <div><dt data-i18n="versionDate">Fecha versión</dt><dd>10/12/2025</dd></div>
+        <div><dt data-i18n="documentType">Tipo</dt><dd data-i18n="procedure">Procedimiento</dd></div>
+      </dl>
+      <p data-i18n="dialogText">Toda regla de cálculo implementada en esta web debe poder rastrearse a un apartado de este procedimiento. Cuando el documento no permite resolver algo de forma automática, la herramienta lo identifica expresamente.</p>
+      <div class="notice notice--warning">
+        <strong data-i18n="important">Importante</strong>
+        <span data-i18n="dialogWarning">Esta herramienta no es una aplicación oficial del CSAPG y no sustituye la relación provisional o definitiva de puntuaciones.</span>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="courseTemplate">
+    <article class="dynamic-item course-item">
+      <div class="dynamic-item__top">
+        <strong class="item-title">Curso</strong>
+        <button class="icon-btn remove-item" type="button" aria-label="Eliminar">×</button>
+      </div>
+      <div class="form-grid form-grid--3">
+        <label class="field field--span2"><span data-label="courseName">Nombre del curso</span><input data-field="name" type="text" placeholder="Ej. Manejo del paciente crítico" /></label>
+        <label class="field"><span data-label="completionDate">Fecha de finalización</span><input data-field="date" type="date" /></label>
+        <label class="field"><span data-label="modality">Modalidad</span><select data-field="modality"><option value="onsite" data-label-option="onsite">Presencial</option><option value="online" data-label-option="online">Online / distancia</option><option value="unknown" data-label-option="unknownMode">No consta</option></select></label>
+        <label class="field"><span data-label="specificity">Relación con el servicio</span><select data-field="specific"><option value="yes" data-label-option="specificYes">Específica del servicio</option><option value="no" data-label-option="specificNo">Relacionada con la vacante, no específica</option><option value="unknown" data-label-option="specificUnknown">No lo sé</option></select></label>
+        <label class="field"><span data-label="hours">Horas que constan</span><input data-field="hours" type="number" min="0" step="0.1" placeholder="0" /></label>
+        <label class="field"><span>ECTS</span><input data-field="ects" type="number" min="0" step="0.01" placeholder="0" /></label>
+        <label class="field"><span data-label="cfcCredits">Créditos CFC</span><input data-field="cfc" type="number" min="0" step="0.01" placeholder="0" /></label>
+        <label class="field"><span data-label="days">Días identificables</span><input data-field="days" type="number" min="0" step="1" placeholder="0" /></label>
+        <label class="field"><span data-label="beforeTitle">¿Anterior a la titulación de acceso?</span><select data-field="beforeTitle"><option value="no" data-label-option="no">No</option><option value="yes-compatible" data-label-option="yesCompatible">Sí, pero contenido idéntico/compatible</option><option value="yes" data-label-option="yes">Sí</option></select></label>
+      </div>
+      <div class="item-calc"></div>
+    </article>
+  </template>
+
+  <template id="academicTemplate">
+    <article class="dynamic-item academic-item">
+      <div class="dynamic-item__top">
+        <strong class="item-title">Titulación</strong>
+        <button class="icon-btn remove-item" type="button" aria-label="Eliminar">×</button>
+      </div>
+      <div class="form-grid form-grid--3">
+        <label class="field field--span2"><span data-label="academicName">Nombre de la titulación</span><input data-field="name" type="text" placeholder="Ej. Máster en…" /></label>
+        <label class="field"><span data-label="completionDate">Fecha de finalización</span><input data-field="date" type="date" /></label>
+        <label class="field"><span data-label="academicType">Tipo</span><select data-field="type"></select></label>
+        <label class="field"><span data-label="durationHours">Duración acreditada (horas)</span><input data-field="hours" type="number" min="0" step="0.1" placeholder="0" /></label>
+        <label class="field"><span data-label="durationEcts">Duración acreditada (ECTS)</span><input data-field="ects" type="number" min="0" step="0.01" placeholder="0" /></label>
+        <label class="field academic-specific-field"><span data-label="academicSpecific">¿Es específica del servicio?</span><select data-field="specific"><option value="yes" data-label-option="yes">Sí</option><option value="no" data-label-option="no">No</option><option value="unknown" data-label-option="dontKnow">No lo sé</option></select></label>
+        <label class="check-row field--span2"><input data-field="required" type="checkbox" /><span data-label="requiredAcademic">Es la titulación mínima/requisito obligatorio para acceder a la plaza</span></label>
+      </div>
+      <div class="item-calc"></div>
+    </article>
+  </template>
+
+  <template id="languageTemplate">
+    <div class="language-row dynamic-item">
+      <label class="field"><span data-label="language">Idioma</span><input data-field="name" type="text" placeholder="Inglés" /></label>
+      <label class="field"><span data-label="level">Nivel oficial</span><select data-field="level"><option value="0.2">A1 · 0,2</option><option value="0.3">A2 · 0,3</option><option value="0.5">B1 · 0,5</option><option value="0.7">B2 · 0,7</option><option value="0.8">C1 · 0,8</option><option value="1">C2 · 1,0</option></select></label>
+      <button class="icon-btn remove-item" type="button" aria-label="Eliminar">×</button>
+    </div>
+  </template>
+
+  <script>
+(() => {
+  'use strict';
+
+  const INF = Number.POSITIVE_INFINITY;
+
+  const meta = {
+    id: '6455',
+    version: '1.0',
+    versionDate: '10/12/2025',
+    title: 'Procediment de convocatòries internes CSAPG',
+    appRevision: '0.1.0',
+    reviewedAt: '30/09/2026'
+  };
+
+  const groupData = {
+    g12: {
+      label: 'Grup 1.2',
+      categories: [
+        ['physician', 'Metge/ssa'],
+        ['pharmacist', 'Farmacèutic/a'],
+        ['other', 'Altres professionals Grup 1.2']
+      ],
+      services: {
+        physician: [['general', 'Lloc de treball convocat']],
+        pharmacist: [['general', 'Lloc de treball convocat']],
+        other: [['general', 'Lloc de treball convocat']]
+      }
+    },
+    g22: {
+      label: 'Grup 2.2',
+      categories: [
+        ['nursing', 'Infermer/a'],
+        ['midwife', 'Llevador/a'],
+        ['physio', 'Fisioterapeuta'],
+        ['other', 'Resta de categories Grup 2.2']
+      ],
+      services: {
+        nursing: [
+          ['common', 'Àrea comuna / altres serveis'],
+          ['icu', 'UCI'],
+          ['or', 'Bloc quirúrgic'],
+          ['pediatrics', 'Pediatria'],
+          ['geriatrics', 'Geriatria'],
+          ['sem', 'SEM'],
+          ['occupational', 'Infermeria del treball'],
+          ['bloodbank', 'Banc de sang'],
+          ['radiology', 'Radiologia']
+        ],
+        midwife: [['midwife', 'Llevador/a · requisit normatiu']],
+        physio: [
+          ['common', 'Àrea comuna / altres serveis'],
+          ['icu', 'UCI'],
+          ['neurology', 'Neurologia']
+        ],
+        other: [['other', 'Lloc de treball convocat']]
+      }
+    },
+    g3: {
+      label: 'Grups 3.1 / 3.2 / 7.2',
+      categories: [
+        ['tcai', 'TCAI'],
+        ['g31other', 'Altres Grup 3.1'],
+        ['g32', 'Tècnic/a superior · Grup 3.2'],
+        ['porter', 'Portalliteres · Grup 7.2']
+      ],
+      services: {
+        tcai: [
+          ['common', 'Àrea comuna / altres serveis'],
+          ['icu', 'UCI'],
+          ['or', 'Bloc quirúrgic'],
+          ['pediatrics', 'Pediatria']
+        ],
+        g31other: [['common', 'Lloc de treball convocat']],
+        g32: [['common', 'Lloc de treball convocat']],
+        porter: [['common', 'Lloc de treball convocat']]
+      }
+    },
+    g4567: {
+      label: 'Grups 4 / 5 / 6 / 7',
+      categories: [
+        ['g4', 'Grup 4'],
+        ['g5', 'Grup 5'],
+        ['g6', 'Grup 6'],
+        ['g7', 'Grup 7 (excepte portalliteres)']
+      ],
+      services: {
+        g4: [['common', 'Lloc de treball convocat']],
+        g5: [['common', 'Lloc de treball convocat']],
+        g6: [['common', 'Lloc de treball convocat']],
+        g7: [['common', 'Lloc de treball convocat']]
+      }
+    }
+  };
+
+  const academicTypes = {
+    g12: [
+      { value: 'healthDegree', es: 'Licenciatura / diplomatura / grado rama sanitaria', ca: 'Llicenciatura / diplomatura / grau branca sanitària', points: 6 },
+      { value: 'postgrad', es: 'Diploma de postgrado', ca: 'Diploma de postgrau', points: 3, minHours: 150 },
+      { value: 'expert', es: 'Experto universitario', ca: 'Expert universitari', points: 3 },
+      { value: 'master', es: 'Máster', ca: 'Màster', points: 6, minHours: 300 },
+      { value: 'specialty', es: 'Especialidad no obligatoria para la categoría', ca: 'Especialitat no obligatòria per a la categoria', points: 6 },
+      { value: 'doctorate', es: 'Doctorado', ca: 'Doctorat', points: 9 }
+    ],
+    g22special: [
+      { value: 'healthDegree', es: 'Licenciatura / diplomatura / grado sanitario adicional', ca: 'Llicenciatura / diplomatura / grau sanitari addicional', points: 3, specificPoints: 3 },
+      { value: 'postgrad', es: 'Diploma de postgrado', ca: 'Diploma de postgrau', points: 3, specificPoints: 6, minHours: 150 },
+      { value: 'expert', es: 'Experto o especialista universitario', ca: 'Expert o especialista universitari', points: 3, specificPoints: 6 },
+      { value: 'master', es: 'Máster', ca: 'Màster', points: 6, specificPoints: 12, minHours: 300 },
+      { value: 'specialty', es: 'Especialidad', ca: 'Especialitat', points: 6, specificPoints: 12 },
+      { value: 'doctorate', es: 'Doctorado', ca: 'Doctorat', points: 9, specificPoints: 18 }
+    ],
+    g22common: [
+      { value: 'healthDegree', es: 'Licenciatura / diplomatura / grado sanitario adicional', ca: 'Llicenciatura / diplomatura / grau sanitari addicional', points: 6 },
+      { value: 'postgrad', es: 'Diploma de postgrado', ca: 'Diploma de postgrau', points: 3, minHours: 150 },
+      { value: 'expert', es: 'Experto universitario', ca: 'Expert universitari', points: 3 },
+      { value: 'master', es: 'Máster', ca: 'Màster', points: 6, minHours: 300 },
+      { value: 'specialty', es: 'Especialidad', ca: 'Especialitat', points: 6 },
+      { value: 'doctorate', es: 'Doctorado', ca: 'Doctorat', points: 9 }
+    ],
+    g3special: [
+      { value: 'fpMediumHealth', es: 'Otro grado medio sanitario admitido por el protocolo', ca: 'Un altre grau mitjà sanitari admès pel protocol', points: 3 },
+      { value: 'fpHigherHealth', es: 'Otro grado superior sanitario admitido por el protocolo', ca: 'Un altre grau superior sanitari admès pel protocol', points: 5 },
+      { value: 'healthDegree', es: 'Licenciatura / diplomatura / grado universitario sanitario', ca: 'Llicenciatura / diplomatura / grau universitari sanitari', points: 6 }
+    ],
+    g3common: [
+      { value: 'fpMediumHealth', es: 'Otro grado medio sanitario admitido por el protocolo', ca: 'Un altre grau mitjà sanitari admès pel protocol', points: 3 },
+      { value: 'fpHigherHealth', es: 'Otro grado superior sanitario admitido por el protocolo', ca: 'Un altre grau superior sanitari admès pel protocol', points: 5 },
+      { value: 'healthDegree', es: 'Licenciatura / diplomatura / grado universitario sanitario', ca: 'Llicenciatura / diplomatura / grau universitari sanitari', points: 6 }
+    ],
+    g4567: [
+      { value: 'professionalCert', es: 'Certificado de profesionalidad adicional vinculado a la vacante', ca: 'Certificat de professionalitat addicional vinculat a la vacant', points: 2 },
+      { value: 'fpMedium', es: 'Grado medio adicional vinculado a la vacante', ca: 'Grau mitjà addicional vinculat a la vacant', points: 3 },
+      { value: 'fpHigher', es: 'Grado superior adicional vinculado a la vacante', ca: 'Grau superior addicional vinculat a la vacant', points: 5 }
+    ]
+  };
+
+  const configs = {
+    g12: {
+      key: 'g12', section: '3.2', expSection: '3.2.1', meritsSection: '3.2.2',
+      expMax: 60, meritsMax: 40,
+      seniority: { rate: 1, max: 30, completedYearsOnly: true },
+      categoryExp: { rate: 1, max: 30 },
+      serviceExp: null,
+      courseRates: { onsite: 0.01, online: 0.008 },
+      academics: academicTypes.g12,
+      research: { base: 0.3 },
+      teachingMode: 'g12'
+    },
+    g22special: {
+      key: 'g22special', section: '4.2.1', expSection: '4.2.1.1', meritsSection: '4.2.1.2',
+      expMax: 70, meritsMax: 30,
+      seniority: { rate: 1, max: 30, completedYearsOnly: true },
+      categoryExp: { rate: 1, max: 20 },
+      serviceExp: { rate: 2, max: 20 },
+      courseRates: { onsite: 0.01, online: 0.008, specificOnsite: 0.02, specificOnline: 0.016 },
+      academics: academicTypes.g22special,
+      research: { base: 0.3, specific: 0.6 },
+      teachingMode: 'specific06'
+    },
+    g22common: {
+      key: 'g22common', section: '4.2.2', expSection: '4.2.2.1', meritsSection: '4.2.2.2',
+      expMax: 60, meritsMax: 40,
+      seniority: { rate: 1, max: 30, completedYearsOnly: true },
+      categoryExp: { rate: 1, max: 30 },
+      serviceExp: null,
+      courseRates: { onsite: 0.01, online: 0.008 },
+      academics: academicTypes.g22common,
+      research: { base: 0.3 },
+      teachingMode: 'base03'
+    },
+    g3special: {
+      key: 'g3special', section: '5.2.1', expSection: '5.2.1.1', meritsSection: '5.2.1.2',
+      expMax: 70, meritsMax: 30,
+      seniority: { rate: 1, max: 30, completedYearsOnly: true },
+      categoryExp: { rate: 1, max: 20 },
+      serviceExp: { rate: 2, max: 20 },
+      // Literal del protocolo ID 6455, pág. 30: 0,2 / 0,1 / 0,16 / 0,08 puntos por hora.
+      courseRates: { onsite: 0.1, online: 0.08, specificOnsite: 0.2, specificOnline: 0.16 },
+      academics: academicTypes.g3special,
+      research: { base: 0.3, specific: 0.6 },
+      teachingMode: 'specific06',
+      literalRateWarning: true
+    },
+    g3common: {
+      key: 'g3common', section: '5.2.2', expSection: '5.2.2.1', meritsSection: '5.2.2.2',
+      expMax: 60, meritsMax: 40,
+      seniority: { rate: 1, max: 30, completedYearsOnly: true },
+      categoryExp: { rate: 1, max: 30 },
+      serviceExp: null,
+      // Literal del protocolo ID 6455, pág. 34: 0,1 / 0,08 puntos por hora.
+      courseRates: { onsite: 0.1, online: 0.08 },
+      academics: academicTypes.g3common,
+      research: { base: 0.3 },
+      teachingMode: 'base03',
+      literalRateWarning: true
+    },
+    g4567: {
+      key: 'g4567', section: '6.2', expSection: '6.2.1', meritsSection: '6.2.2',
+      expMax: 60, meritsMax: 40,
+      seniority: { rate: 1, max: 30, completedYearsOnly: true },
+      categoryExp: { rate: 1, max: 30 },
+      serviceExp: null,
+      courseRates: { onsite: 0.01, online: 0.008 },
+      academics: academicTypes.g4567,
+      research: { base: 0.3 },
+      teachingMode: 'base03'
+    }
+  };
+
+  function cloneConfig(config) {
+    return JSON.parse(JSON.stringify(config));
+  }
+
+  function isG22Special(category, service) {
+    if (category === 'midwife') return true;
+    if (category === 'physio') return service === 'icu' || service === 'neurology';
+    if (category !== 'nursing') return false;
+    return ['icu', 'or', 'pediatrics', 'geriatrics', 'sem', 'occupational'].includes(service);
+  }
+
+  function isG22Common(category, service) {
+    if (category === 'physio') return service === 'common';
+    if (category === 'nursing') return ['common', 'bloodbank', 'radiology'].includes(service);
+    return false;
+  }
+
+  function isG3Special(category, service) {
+    return category === 'tcai' && ['icu', 'or', 'pediatrics'].includes(service);
+  }
+
+  function baseMeritConfigForGroup(group, category, service) {
+    if (group === 'g12') return configs.g12;
+    if (group === 'g22') {
+      if (isG22Special(category, service)) return configs.g22special;
+      if (isG22Common(category, service)) return configs.g22common;
+      return null;
+    }
+    if (group === 'g3') return isG3Special(category, service) ? configs.g3special : configs.g3common;
+    if (group === 'g4567') return configs.g4567;
+    return null;
+  }
+
+  function resolveRoute({ group, process, category, service }) {
+    if (!group || !process || !category || !service) return null;
+
+    // Regla general 2.2.1: en cambio de turno/servicio de áreas comunes solo merita antigüedad;
+    // en caso de empate, formación sin límite. Las áreas especiales/normativas aplican su baremo específico.
+    if (process === 'shift') {
+      const commonShift =
+        (group === 'g22' && isG22Common(category, service)) ||
+        (group === 'g3' && !isG3Special(category, service)) ||
+        group === 'g4567';
+
+      if (commonShift) {
+        const meritBase = baseMeritConfigForGroup(group, category, service);
+        return {
+          key: 'seniorityOnly',
+          section: '2.2.1',
+          expSection: '2.2.1',
+          meritsSection: meritBase ? meritBase.meritsSection : '2.2.1',
+          rankingMode: 'seniority',
+          expMax: INF,
+          meritsMax: INF,
+          seniority: { rate: 1, max: INF, completedYearsOnly: true },
+          categoryExp: null,
+          serviceExp: null,
+          meritBase,
+          courseRates: meritBase?.courseRates || { onsite: 0.01, online: 0.008 },
+          academics: meritBase?.academics || [],
+          research: meritBase?.research || { base: 0.3 },
+          teachingMode: meritBase?.teachingMode || 'base03',
+          literalRateWarning: !!meritBase?.literalRateWarning
+        };
+      }
+    }
+
+    if (group === 'g12') return cloneConfig(configs.g12);
+
+    if (group === 'g22') {
+      if (category === 'other') {
+        return {
+          key: 'g22other-undefined',
+          unsupported: true,
+          section: '4.1 / 4.2',
+          reason: 'group22OtherNoNumericBarem'
+        };
+      }
+      return cloneConfig(isG22Special(category, service) ? configs.g22special : configs.g22common);
+    }
+
+    if (group === 'g3') return cloneConfig(isG3Special(category, service) ? configs.g3special : configs.g3common);
+    if (group === 'g4567') return cloneConfig(configs.g4567);
+    return null;
+  }
+
+  function specificRequirement({ group, category, service }) {
+    if (group === 'g12' && ['physician', 'pharmacist'].includes(category)) {
+      return { key: 'specificSpecialty', level: 'required', section: '3.1' };
+    }
+    if (group === 'g22') {
+      if (category === 'midwife') return { key: 'midwifeSpecialty', level: 'required', section: '4.1' };
+      if (category === 'nursing' && service === 'geriatrics') return { key: 'geriatricSpecialty', level: 'required', section: '4.1' };
+      if (category === 'nursing' && service === 'sem') return { key: 'semRequirement', level: 'required', section: '4.1', fields: ['sem30ects', 'sem3years'] };
+      if (category === 'nursing' && service === 'occupational') return { key: 'occupationalSpecialty', level: 'required', section: '4.1' };
+      if (category === 'nursing' && service === 'bloodbank') return { key: 'bloodBankAccreditation', level: 'provisionalPossible', section: '4.1' };
+      if (category === 'nursing' && service === 'radiology') return { key: 'radiologyAccreditation', level: 'provisionalPossible', section: '4.1' };
+    }
+    return null;
+  }
+
+  window.PROTOCOL6455 = {
+    meta,
+    groupData,
+    configs,
+    resolveRoute,
+    specificRequirement,
+    baseMeritConfigForGroup,
+    isG22Special,
+    isG22Common,
+    isG3Special,
+    academicTypes
+  };
+})();
+
+</script>
+  <script>
+(() => {
+  'use strict';
+  const P = window.PROTOCOL6455;
+  if (!P) throw new Error('No se ha cargado el protocolo 6455.');
+
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+  const num = v => Number(v || 0);
+  const clamp = (v, max) => Number.isFinite(max) ? Math.min(v, max) : v;
+  const fmt = (v, digits = 2) => new Intl.NumberFormat(state.lang === 'ca' ? 'ca-ES' : 'es-ES', { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(Number(v || 0));
+  const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+  const state = { lang: 'es', step: 1, requirementValues: {} };
+
+  const T = {
+    es: {
+      brandSub:'Herramienta informativa', protocolChip:'Protocolo ID 6455 · v1.0', eyebrow:'CONVOCATORIAS INTERNAS · CSAPG',
+      heroTitle:'Calcula tu puntuación con el baremo del protocolo vigente',
+      heroLead:'Calculadora creada exclusivamente a partir del <strong>Procediment de convocatòries internes CSAPG</strong>, ID 6455, versión 1.0, de 10/12/2025.',
+      sourceLockTitle:'Motor ligado al protocolo ID 6455', sourceLockText:'No mezcla baremos de otros procedimientos. Las reglas dudosas se señalan, no se inventan.',
+      start:'Empezar cálculo', howWorks:'Cómo calcula', officialSource:'Fuente única del cálculo', bilingual:'Bilingüe', localCalc:'Cálculo en tu navegador', privacyNote:'No se envían ni almacenan tus datos personales.',
+      calcEyebrow:'CALCULADORA', calcTitle:'Tu expediente, paso a paso', reset:'Reiniciar', step1:'Convocatoria', step2:'Experiencia', step3:'Méritos', step4:'Resultado',
+      sourceCardTitle:'Primero: identifica qué baremo te corresponde', sourceCardText:'El protocolo cambia la forma de puntuar según grupo profesional, tipo de convocatoria y, en algunos colectivos, área o servicio.',
+      publicationDate:'Fecha de publicación de la convocatoria', publicationDateHelp:'Se usa como fecha de corte: antigüedad/experiencia hasta el día anterior y formación finalizada antes de la convocatoria.',
+      group:'Grupo profesional', processType:'Tipo de convocatoria', category:'Categoría / colectivo', serviceArea:'Área / servicio de la plaza', selectOption:'Selecciona…',
+      processShift:'Cambio de turno / servicio', processIncrease:'Incremento de jornada / consideración PB', processCategory:'Cambio de categoría',
+      eligibilityTitle:'Comprobar también requisitos de acceso', eligibilityIntro:'Esta comprobación no modifica la puntuación: avisa si los datos introducidos no encajan con los requisitos previos del protocolo.',
+      indefinite:'Contrato laboral indefinido', active:'En activo en la fecha de publicación', plantilla:'Situación de plantilla', dedication:'Dedicación contractual', partial:'Tiempo parcial',
+      sameCategory:'Ya ostento la categoría de la plaza', requiredTitle:'Dispongo de titulación/requisitos legales de la plaza', continue:'Continuar', back:'Atrás',
+      expTitle:'Antigüedad y experiencia', expIntro:'Introduce los periodos efectivos que consten o deban constar a fecha de corte. La antigüedad reconocida en nómina puntúa solo por años completos cuando el protocolo lo dice expresamente.',
+      seniority:'Antigüedad CSAPG reconocida en nómina', years:'Años', months:'Meses adicionales', categoryExperience:'Experiencia en la categoría de la plaza dentro del CSAPG', serviceExperience:'Experiencia en la categoría dentro del servicio concreto',
+      coursesTitle:'Formación continuada', addCourse:'+ Añadir curso', coursesHelp:'Añade cada curso. La calculadora convierte ECTS, créditos CFC o días cuando corresponda y aplica presencial/online según el baremo de tu ruta.',
+      academicTitle:'Formación académica / titulaciones adicionales', addAcademic:'+ Añadir titulación', certsTitle:'ACTIC e idiomas', none:'Ninguno', catalan:'Catalán', otherLanguages:'Otros idiomas', addLanguage:'+ Añadir idioma', languagesCap:'Solo cuenta el nivel más alto de cada idioma; máximo total 1 punto.',
+      researchTeachingTitle:'Investigación y docencia', calculate:'Calcular resultado', editMerits:'Editar méritos', print:'Imprimir / Guardar PDF', newCalculation:'Nuevo cálculo',
+      methodEyebrow:'TRANSPARENCIA', methodTitle:'Qué hace —y qué no hace— la calculadora', method1Title:'Aplica reglas literales', method1Text:'Cuando el protocolo fija una equivalencia, un máximo o una puntuación concreta, se aplica tal cual.',
+      method2Title:'Señala lo interpretable', method2Text:'Si falta una duración mínima, no consta la especificidad o el texto no define un redondeo, el resultado lo marca como pendiente o sujeto a interpretación.',
+      method3Title:'No sustituye la valoración oficial', method3Text:'La puntuación oficial es la que resulte del procedimiento y de la evaluación de los órganos previstos en él.',
+      footerPurpose:'Herramienta informativa para revisar el baremo de convocatorias internas.', appVersion:'Calculadora v0.1 · revisión 30/09/2026', source:'FUENTE', version:'Versión', versionDate:'Fecha versión', documentType:'Tipo', procedure:'Procedimiento',
+      dialogText:'Toda regla de cálculo implementada en esta web debe poder rastrearse a un apartado de este procedimiento. Cuando el documento no permite resolver algo de forma automática, la herramienta lo identifica expresamente.',
+      important:'Importante', dialogWarning:'Esta herramienta no es una aplicación oficial del CSAPG y no sustituye la relación provisional o definitiva de puntuaciones.',
+      courseName:'Nombre del curso', completionDate:'Fecha de finalización', modality:'Modalidad', onsite:'Presencial', online:'Online / distancia', unknownMode:'No consta', specificity:'Relación con el servicio', specificYes:'Específica del servicio', specificNo:'Relacionada con la vacante, no específica', specificUnknown:'No lo sé', hours:'Horas que constan', cfcCredits:'Créditos CFC', days:'Días identificables', beforeTitle:'¿Anterior a la titulación de acceso?', no:'No', yes:'Sí', yesCompatible:'Sí, pero contenido idéntico/compatible',
+      academicName:'Nombre de la titulación', academicType:'Tipo', durationHours:'Duración acreditada (horas)', durationEcts:'Duración acreditada (ECTS)', academicSpecific:'¿Es específica del servicio?', dontKnow:'No lo sé', requiredAcademic:'Es la titulación mínima/requisito obligatorio para acceder a la plaza', language:'Idioma', level:'Nivel oficial',
+      routeFull:'Baremo completo', routeSeniority:'Orden por antigüedad', routeUnsupported:'No automatizable con precisión',
+      routeSeniorityText:'Para cambio de turno/servicio en áreas comunes, el protocolo indica que merita exclusivamente la antigüedad al CSAPG. En caso de empate se usa la puntuación de formación sin límite establecido.',
+      routeFullText:'Se aplicará el baremo específico de antigüedad/experiencia y formación, investigación y docencia correspondiente a esta ruta.',
+      routeG22Other:'El procedimiento no fija un baremo numérico separado para el resto de categorías del Grupo 2.2: el apartado 4.2.2 nombra expresamente enfermería y fisioterapia. La herramienta no inventará ese criterio.',
+      sourceSection:'Apartado', eligibilityOk:'Los datos introducidos encajan con los requisitos generales seleccionados.', eligibilityFail:'Hay requisitos de acceso que no encajan con el procedimiento:',
+      reqIndefinite:'Debe existir contrato laboral indefinido para promoción interna.', reqActive:'Debe estar en activo o situación asimilada en la fecha de publicación.', reqShiftPB:'El cambio de turno/servicio se convoca primero para Plantilla Base (PB).', reqShift100:'Para esta fase se exige dedicación al 100%.', reqShiftSame:'Debe ostentar la misma categoría profesional.', reqIncreasePC:'El incremento de jornada/consideración PB está previsto para Plantilla Complementaria (PC).', reqIncreaseSame:'Debe ostentar la categoría profesional de la vacante.', reqCategoryDifferent:'En cambio de categoría, la persona no ostenta la categoría de la vacante.', reqCategoryTitle:'Debe disponer de titulación y requisitos necesarios para ocupar la categoría.',
+      reqSpecificSpecialty:'La plaza de médico/a o farmacéutico/a exige la especialidad específica del puesto.', reqMidwife:'Se exige la especialidad de Enfermería Obstétrico-Ginecológica.', reqGeriatrics:'Se exige la especialidad de Enfermería Geriátrica.', reqOccupational:'Se exige la especialidad de Enfermería del Trabajo.', reqSem30:'SEM: Máster/Postgrado/Experto de mínimo 30 ECTS en urgencias/emergencias y/o paciente crítico.', reqSem3:'SEM: 3 años de experiencia profesional acreditada en los ámbitos que describe el protocolo.', reqBlood:'Banco de sangre: acreditación del BST. Sin ella, el protocolo prevé ocupación provisional hasta obtenerla.', reqRadiology:'Radiología: acreditación del CSN para operar instalaciones de RX con finalidad diagnóstica. Sin ella, el protocolo prevé ocupación provisional hasta obtenerla.',
+      confirmRequirement:'Acredito este requisito', confirmSem30:'Acredito la formación mínima de 30 ECTS', confirmSem3:'Acredito los 3 años de experiencia exigidos',
+      seniorityRule:'1 punto por cada año completo de prestación efectiva. Los meses adicionales no generan fracción de punto en este concepto.', expFractionWarning:'El protocolo dice “por cada año” de experiencia, pero no define expresamente cómo redondear o prorratear meses incompletos. La herramienta muestra como segura la puntuación por años completos y como posible la parte proporcional de los meses.',
+      meritNotApplicable:'En esta ruta no existe un baremo total sobre 100: la antigüedad ordena las candidaturas y la formación solo actúa como desempate.',
+      academicHelpG12:'No puntúa la titulación mínima de acceso. Postgrado: mínimo 150 h. Máster: mínimo 300 h. La especialidad solo puntúa cuando no es obligatoria para ejercer la categoría.',
+      academicHelpG22Special:'No puntúa la titulación mínima. La formación específica del servicio puede duplicar determinados méritos conforme al apartado 4.2.1.2.',
+      academicHelpG22Common:'No puntúa la titulación mínima. Postgrado: mínimo 150 h; Máster: mínimo 300 h.',
+      academicHelpG3:'Solo las titulaciones adicionales que encajan en la relación sanitaria prevista por el protocolo: grado medio 3, grado superior 5, grado universitario sanitario 6.',
+      academicHelpG4567:'Titulaciones oficiales adicionales de FP de nivel igual o superior, vinculadas a la vacante y de la misma rama: certificado 2, grado medio 3, grado superior 5.',
+      activityHelpG12:'Introduce actividades/años acreditables. Investigación: 0,3 por actividad/año. La docencia tiene valores distintos según el tipo.', activityHelpSpecific:'Introduce actividades/años acreditables. Actividad específica del servicio: 0,6; no específica: 0,3.', activityHelpBase:'Introduce actividades/años acreditables. Investigación y docencia: 0,3 puntos por actividad/año.',
+      research:'Investigación / actividad científica', researchSpecific:'Investigación específica del servicio', researchNonSpecific:'Investigación no específica', teaching:'Docencia / actividad docente', teachingSpecific:'Docencia específica del servicio', teachingNonSpecific:'Docencia no específica', tutorResidents:'Tutor/a de residentes', coordinatorResidents:'Coordinador/a o colaborador/a de residentes', practices:'Prácticas de grado/postgrado/máster', onboarding:'Acogida/formación de nuevas incorporaciones', continuingTeaching:'Cursos sanitarios de formación continuada (docencia)', activitiesYears:'Actividades / años acreditables',
+      resultTitle:'Puntuación orientativa', resultSubtitle:'Calculada exclusivamente con el protocolo ID 6455 · v1.0', resultRange:'Rango estimado por elementos pendientes de validación', secureScore:'Puntuación calculable sin interpretación', possibleScore:'Puntuación posible si se validan los elementos pendientes',
+      experienceBlock:'Antigüedad y experiencia', meritsBlock:'Formación, investigación y docencia', rawMerits:'Méritos antes de aplicar máximo', factorMaximum:'Máximo del factor', total:'Total', traceability:'Trazabilidad del cálculo', pending:'Pendiente / sujeto a validación', noPending:'No se han detectado variables pendientes en los datos introducidos.',
+      monthsPending:'Meses incompletos de experiencia: el protocolo no define su prorrateo.', dateMissing:'No se ha indicado la fecha de finalización; debe comprobarse que sea anterior a la convocatoria.', afterCutoff:'Finalizado en o después de la fecha de publicación: no se computa.', hoursMissing:'No constan horas, créditos ni días suficientes para calcular este mérito.', minDurationMissing:'No consta la duración mínima exigida por el protocolo.', belowMin:'No alcanza la duración mínima exigida.', requiredNoPoints:'La titulación mínima/requisito de acceso no puntúa.', beforeTitleNoPoints:'La formación previa a la titulación de acceso no se computa salvo la excepción prevista.', beforeTitlePending:'La compatibilidad de esta formación previa debe ser validada.', specificityPending:'No se ha determinado si la formación es específica del servicio.',
+      courseRule:'Curso', academicRule:'Titulación', acticRule:'ACTIC', catalanRule:'Catalán', languagesRule:'Otros idiomas', researchRule:'Investigación', teachingRule:'Docencia',
+      tiebreakTitle:'Criterio de desempate', tiebreakFormation:'Puntuación de formación para desempate', tiebreakNote:'El protocolo no establece un límite para esta puntuación de formación en caso de empate de antigüedad.',
+      seniorityRanking:'Esta convocatoria no genera una puntuación total sobre 100', seniorityRankingText:'La prioridad se determina por la antigüedad al CSAPG. Si existe empate en antigüedad, se utiliza la puntuación de formación sin límite establecido.',
+      unsupportedResult:'No se ofrece una cifra automática porque el protocolo aportado no define de forma inequívoca el baremo numérico para esta combinación. Mostrar un total sería inventar un criterio.',
+      literalRateTitle:'Atención: valores literales del protocolo', literalRateText:'Para los Grupos 3.1/3.2/7.2 el documento ID 6455 fija tasas por hora muy superiores a las de otros grupos (p. ej. 0,1/0,08 y, en TCAI especial, 0,2/0,16). La calculadora las aplica literalmente y no las corrige.',
+      disclaimerTitle:'Resultado orientativo, no oficial', disclaimerText:'Esta herramienta aplica el Procediment de convocatòries internes CSAPG, ID 6455, versión 1.0 (10/12/2025). No sustituye la valoración oficial del expediente. La puntuación definitiva depende de la documentación aportada y, cuando proceda, de la valoración de los órganos previstos en el procedimiento, incluida la Comisión Mixta. La calculadora no modifica ni completa silenciosamente el protocolo.',
+      cutOffWarning:'No has indicado la fecha de publicación. El cálculo no puede comprobar automáticamente si cada mérito estaba finalizado dentro del plazo.',
+      acticMax:'Solo se valora el nivel ACTIC más alto (máx. 1 punto).', catalanMax:'Solo se valora el nivel de catalán más alto (máx. 2 puntos).', languagesMax:'La suma de otros idiomas se limita a 1 punto.',
+      emptyCourse:'Curso sin datos suficientes', emptyAcademic:'Titulación sin datos suficientes', convertedHours:'Horas computables', points:'puntos', possible:'posible', excluded:'excluido',
+      group12AreaNote:'El apartado 3 del protocolo no clasifica áreas comunes/especiales para el Grupo 1.2; se aplica el baremo del apartado 3.2.',
+      noNumericalCap:'sin límite', max:'máx.', secured:'seguro', estimated:'estimado'
+    },
+    ca: {
+      brandSub:'Eina informativa', protocolChip:'Protocol ID 6455 · v1.0', eyebrow:'CONVOCATÒRIES INTERNES · CSAPG',
+      heroTitle:'Calcula la teva puntuació amb el barem del protocol vigent', heroLead:'Calculadora creada exclusivament a partir del <strong>Procediment de convocatòries internes CSAPG</strong>, ID 6455, versió 1.0, de 10/12/2025.', sourceLockTitle:'Motor lligat al protocol ID 6455', sourceLockText:'No barreja barems d’altres procediments. Les regles dubtoses s’assenyalen, no s’inventen.',
+      start:'Començar càlcul', howWorks:'Com calcula', officialSource:'Font única del càlcul', bilingual:'Bilingüe', localCalc:'Càlcul al teu navegador', privacyNote:'No s’envien ni s’emmagatzemen les teves dades personals.', calcEyebrow:'CALCULADORA', calcTitle:'El teu expedient, pas a pas', reset:'Reiniciar', step1:'Convocatòria', step2:'Experiència', step3:'Mèrits', step4:'Resultat',
+      sourceCardTitle:'Primer: identifica quin barem et correspon', sourceCardText:'El protocol canvia la forma de puntuar segons grup professional, tipus de convocatòria i, en alguns col·lectius, àrea o servei.', publicationDate:'Data de publicació de la convocatòria', publicationDateHelp:'S’utilitza com a data de tall: antiguitat/experiència fins al dia anterior i formació finalitzada abans de la convocatòria.', group:'Grup professional', processType:'Tipus de convocatòria', category:'Categoria / col·lectiu', serviceArea:'Àrea / servei de la plaça', selectOption:'Selecciona…', processShift:'Canvi de torn / servei', processIncrease:'Increment de jornada / consideració PB', processCategory:'Canvi de categoria',
+      eligibilityTitle:'Comprovar també requisits d’accés', eligibilityIntro:'Aquesta comprovació no modifica la puntuació: avisa si les dades introduïdes no encaixen amb els requisits previs del protocol.', indefinite:'Contracte laboral indefinit', active:'En actiu en la data de publicació', plantilla:'Situació de plantilla', dedication:'Dedicació contractual', partial:'Temps parcial', sameCategory:'Ja ostento la categoria de la plaça', requiredTitle:'Disposo de titulació/requisits legals de la plaça', continue:'Continuar', back:'Enrere',
+      expTitle:'Antiguitat i experiència', expIntro:'Introdueix els períodes efectius que constin o hagin de constar a la data de tall. L’antiguitat reconeguda en nòmina puntua només per anys complets quan el protocol ho diu expressament.', seniority:'Antiguitat CSAPG reconeguda en nòmina', years:'Anys', months:'Mesos addicionals', categoryExperience:'Experiència en la categoria de la plaça dins del CSAPG', serviceExperience:'Experiència en la categoria dins del servei concret',
+      coursesTitle:'Formació continuada', addCourse:'+ Afegir curs', coursesHelp:'Afegeix cada curs. La calculadora converteix ECTS, crèdits CFC o dies quan correspon i aplica presencial/online segons el barem de la teva ruta.', academicTitle:'Formació acadèmica / titulacions addicionals', addAcademic:'+ Afegir titulació', certsTitle:'ACTIC i idiomes', none:'Cap', catalan:'Català', otherLanguages:'Altres idiomes', addLanguage:'+ Afegir idioma', languagesCap:'Només compta el nivell més alt de cada idioma; màxim total 1 punt.', researchTeachingTitle:'Recerca i docència', calculate:'Calcular resultat', editMerits:'Editar mèrits', print:'Imprimir / Desar PDF', newCalculation:'Nou càlcul',
+      methodEyebrow:'TRANSPARÈNCIA', methodTitle:'Què fa —i què no fa— la calculadora', method1Title:'Aplica regles literals', method1Text:'Quan el protocol fixa una equivalència, un màxim o una puntuació concreta, s’aplica tal qual.', method2Title:'Assenyala el que és interpretable', method2Text:'Si falta una durada mínima, no consta l’especificitat o el text no defineix un arrodoniment, el resultat ho marca com a pendent o subjecte a interpretació.', method3Title:'No substitueix la valoració oficial', method3Text:'La puntuació oficial és la que resulti del procediment i de l’avaluació dels òrgans que hi estan previstos.', footerPurpose:'Eina informativa per revisar el barem de convocatòries internes.', appVersion:'Calculadora v0.1 · revisió 30/09/2026', source:'FONT', version:'Versió', versionDate:'Data versió', documentType:'Tipus', procedure:'Procediment', dialogText:'Tota regla de càlcul implementada en aquesta web s’ha de poder rastrejar a un apartat d’aquest procediment. Quan el document no permet resoldre alguna cosa de forma automàtica, l’eina ho identifica expressament.', important:'Important', dialogWarning:'Aquesta eina no és una aplicació oficial del CSAPG i no substitueix la relació provisional o definitiva de puntuacions.',
+      courseName:'Nom del curs', completionDate:'Data de finalització', modality:'Modalitat', onsite:'Presencial', online:'Online / distància', unknownMode:'No consta', specificity:'Relació amb el servei', specificYes:'Específica del servei', specificNo:'Relacionada amb la vacant, no específica', specificUnknown:'No ho sé', hours:'Hores que consten', cfcCredits:'Crèdits CFC', days:'Dies identificables', beforeTitle:'Anterior a la titulació d’accés?', no:'No', yes:'Sí', yesCompatible:'Sí, però contingut idèntic/compatible', academicName:'Nom de la titulació', academicType:'Tipus', durationHours:'Durada acreditada (hores)', durationEcts:'Durada acreditada (ECTS)', academicSpecific:'És específica del servei?', dontKnow:'No ho sé', requiredAcademic:'És la titulació mínima/requisit obligatori per accedir a la plaça', language:'Idioma', level:'Nivell oficial',
+      routeFull:'Barem complet', routeSeniority:'Ordre per antiguitat', routeUnsupported:'No automatitzable amb precisió', routeSeniorityText:'Per canvi de torn/servei en àrees comunes, el protocol indica que merita exclusivament l’antiguitat al CSAPG. En cas d’empat s’utilitza la puntuació de formació sense límit establert.', routeFullText:'S’aplicarà el barem específic d’antiguitat/experiència i formació, recerca i docència corresponent a aquesta ruta.', routeG22Other:'El procediment no fixa un barem numèric separat per a la resta de categories del Grup 2.2: l’apartat 4.2.2 anomena expressament infermeria i fisioteràpia. L’eina no inventarà aquest criteri.', sourceSection:'Apartat',
+      eligibilityOk:'Les dades introduïdes encaixen amb els requisits generals seleccionats.', eligibilityFail:'Hi ha requisits d’accés que no encaixen amb el procediment:', reqIndefinite:'Cal contracte laboral indefinit per a promoció interna.', reqActive:'Cal estar en actiu o situació assimilada en la data de publicació.', reqShiftPB:'El canvi de torn/servei es convoca primer per a Plantilla Base (PB).', reqShift100:'Per aquesta fase s’exigeix dedicació al 100%.', reqShiftSame:'Cal ostentar la mateixa categoria professional.', reqIncreasePC:'L’increment de jornada/consideració PB està previst per a Plantilla Complementària (PC).', reqIncreaseSame:'Cal ostentar la categoria professional de la vacant.', reqCategoryDifferent:'En canvi de categoria, la persona no ostenta la categoria de la vacant.', reqCategoryTitle:'Cal disposar de titulació i requisits necessaris per ocupar la categoria.',
+      reqSpecificSpecialty:'La plaça de metge/ssa o farmacèutic/a exigeix l’especialitat específica del lloc.', reqMidwife:'S’exigeix l’especialitat d’Infermeria Obstètrico-Ginecològica.', reqGeriatrics:'S’exigeix l’especialitat d’Infermeria Geriàtrica.', reqOccupational:'S’exigeix l’especialitat d’Infermeria del Treball.', reqSem30:'SEM: Màster/Postgrau/Expert de mínim 30 ECTS en urgències/emergències i/o pacient crític.', reqSem3:'SEM: 3 anys d’experiència professional acreditada en els àmbits que descriu el protocol.', reqBlood:'Banc de sang: acreditació del BST. Sense ella, el protocol preveu ocupació provisional fins obtenir-la.', reqRadiology:'Radiologia: acreditació del CSN per operar instal·lacions de RX amb finalitat diagnòstica. Sense ella, el protocol preveu ocupació provisional fins obtenir-la.', confirmRequirement:'Acredito aquest requisit', confirmSem30:'Acredito la formació mínima de 30 ECTS', confirmSem3:'Acredito els 3 anys d’experiència exigits',
+      seniorityRule:'1 punt per cada any complet de prestació efectiva. Els mesos addicionals no generen fracció de punt en aquest concepte.', expFractionWarning:'El protocol diu “per cada any” d’experiència, però no defineix expressament com arrodonir o prorratejar mesos incomplets. L’eina mostra com a segura la puntuació per anys complets i com a possible la part proporcional dels mesos.', meritNotApplicable:'En aquesta ruta no hi ha un barem total sobre 100: l’antiguitat ordena les candidatures i la formació només actua com a desempat.',
+      academicHelpG12:'No puntua la titulació mínima d’accés. Postgrau: mínim 150 h. Màster: mínim 300 h. L’especialitat només puntua quan no és obligatòria per exercir la categoria.', academicHelpG22Special:'No puntua la titulació mínima. La formació específica del servei pot duplicar determinats mèrits segons l’apartat 4.2.1.2.', academicHelpG22Common:'No puntua la titulació mínima. Postgrau: mínim 150 h; Màster: mínim 300 h.', academicHelpG3:'Només les titulacions addicionals que encaixen en la relació sanitària prevista pel protocol: grau mitjà 3, grau superior 5, grau universitari sanitari 6.', academicHelpG4567:'Titulacions oficials addicionals d’FP de nivell igual o superior, vinculades a la vacant i de la mateixa branca: certificat 2, grau mitjà 3, grau superior 5.',
+      activityHelpG12:'Introdueix activitats/anys acreditables. Recerca: 0,3 per activitat/any. La docència té valors diferents segons el tipus.', activityHelpSpecific:'Introdueix activitats/anys acreditables. Activitat específica del servei: 0,6; no específica: 0,3.', activityHelpBase:'Introdueix activitats/anys acreditables. Recerca i docència: 0,3 punts per activitat/any.', research:'Recerca / activitat científica', researchSpecific:'Recerca específica del servei', researchNonSpecific:'Recerca no específica', teaching:'Docència / activitat docent', teachingSpecific:'Docència específica del servei', teachingNonSpecific:'Docència no específica', tutorResidents:'Tutor/a de residents', coordinatorResidents:'Coordinador/a o col·laborador/a de residents', practices:'Pràctiques de grau/postgrau/màster', onboarding:'Acollida/formació de noves incorporacions', continuingTeaching:'Cursos sanitaris de formació continuada (docència)', activitiesYears:'Activitats / anys acreditables',
+      resultTitle:'Puntuació orientativa', resultSubtitle:'Calculada exclusivament amb el protocol ID 6455 · v1.0', resultRange:'Rang estimat per elements pendents de validació', secureScore:'Puntuació calculable sense interpretació', possibleScore:'Puntuació possible si es validen els elements pendents', experienceBlock:'Antiguitat i experiència', meritsBlock:'Formació, recerca i docència', rawMerits:'Mèrits abans d’aplicar màxim', factorMaximum:'Màxim del factor', total:'Total', traceability:'Traçabilitat del càlcul', pending:'Pendent / subjecte a validació', noPending:'No s’han detectat variables pendents en les dades introduïdes.',
+      monthsPending:'Mesos incomplets d’experiència: el protocol no defineix el seu prorrateig.', dateMissing:'No s’ha indicat la data de finalització; cal comprovar que sigui anterior a la convocatòria.', afterCutoff:'Finalitzat en o després de la data de publicació: no es computa.', hoursMissing:'No consten hores, crèdits ni dies suficients per calcular aquest mèrit.', minDurationMissing:'No consta la durada mínima exigida pel protocol.', belowMin:'No arriba a la durada mínima exigida.', requiredNoPoints:'La titulació mínima/requisit d’accés no puntua.', beforeTitleNoPoints:'La formació prèvia a la titulació d’accés no es computa excepte l’excepció prevista.', beforeTitlePending:'La compatibilitat d’aquesta formació prèvia ha de ser validada.', specificityPending:'No s’ha determinat si la formació és específica del servei.',
+      courseRule:'Curs', academicRule:'Titulació', acticRule:'ACTIC', catalanRule:'Català', languagesRule:'Altres idiomes', researchRule:'Recerca', teachingRule:'Docència', tiebreakTitle:'Criteri de desempat', tiebreakFormation:'Puntuació de formació per al desempat', tiebreakNote:'El protocol no estableix un límit per aquesta puntuació de formació en cas d’empat d’antiguitat.', seniorityRanking:'Aquesta convocatòria no genera una puntuació total sobre 100', seniorityRankingText:'La prioritat es determina per l’antiguitat al CSAPG. Si hi ha empat en antiguitat, s’utilitza la puntuació de formació sense límit establert.', unsupportedResult:'No s’ofereix una xifra automàtica perquè el protocol aportat no defineix de forma inequívoca el barem numèric per aquesta combinació. Mostrar un total seria inventar un criteri.',
+      literalRateTitle:'Atenció: valors literals del protocol', literalRateText:'Per als Grups 3.1/3.2/7.2 el document ID 6455 fixa taxes per hora molt superiors a les d’altres grups (p. ex. 0,1/0,08 i, en TCAI especial, 0,2/0,16). La calculadora les aplica literalment i no les corregeix.', disclaimerTitle:'Resultat orientatiu, no oficial', disclaimerText:'Aquesta eina aplica el Procediment de convocatòries internes CSAPG, ID 6455, versió 1.0 (10/12/2025). No substitueix la valoració oficial de l’expedient. La puntuació definitiva depèn de la documentació aportada i, quan pertoqui, de la valoració dels òrgans previstos al procediment, inclosa la Comissió Mixta. La calculadora no modifica ni completa silenciosament el protocol.', cutOffWarning:'No has indicat la data de publicació. El càlcul no pot comprovar automàticament si cada mèrit estava finalitzat dins del termini.', acticMax:'Només es valora el nivell ACTIC més alt (màx. 1 punt).', catalanMax:'Només es valora el nivell de català més alt (màx. 2 punts).', languagesMax:'La suma d’altres idiomes es limita a 1 punt.', emptyCourse:'Curs sense dades suficients', emptyAcademic:'Titulació sense dades suficients', convertedHours:'Hores computables', points:'punts', possible:'possible', excluded:'exclòs', group12AreaNote:'L’apartat 3 del protocol no classifica àrees comunes/especials per al Grup 1.2; s’aplica el barem de l’apartat 3.2.', noNumericalCap:'sense límit', max:'màx.', secured:'segur', estimated:'estimat'
+    }
+  };
+
+  const categoryLabels = {
+    physician:{es:'Médico/a',ca:'Metge/ssa'}, pharmacist:{es:'Farmacéutico/a',ca:'Farmacèutic/a'}, other:{es:'Otros profesionales Grupo 1.2',ca:'Altres professionals Grup 1.2'},
+    nursing:{es:'Enfermero/a',ca:'Infermer/a'}, midwife:{es:'Matrón/a',ca:'Llevador/a'}, physio:{es:'Fisioterapeuta',ca:'Fisioterapeuta'},
+    tcai:{es:'TCAI',ca:'TCAI'}, g31other:{es:'Otras categorías Grupo 3.1',ca:'Altres categories Grup 3.1'}, g32:{es:'Técnico/a superior · Grupo 3.2',ca:'Tècnic/a superior · Grup 3.2'}, porter:{es:'Portalliteres · Grupo 7.2',ca:'Portalliteres · Grup 7.2'},
+    g4:{es:'Grupo 4',ca:'Grup 4'},g5:{es:'Grupo 5',ca:'Grup 5'},g6:{es:'Grupo 6',ca:'Grup 6'},g7:{es:'Grupo 7 (excepto portalliteres)',ca:'Grup 7 (excepte portalliteres)'}
+  };
+  const serviceLabels = {
+    general:{es:'Puesto de trabajo convocado',ca:'Lloc de treball convocat'},common:{es:'Área común / otros servicios',ca:'Àrea comuna / altres serveis'},icu:{es:'UCI',ca:'UCI'},or:{es:'Bloque quirúrgico',ca:'Bloc quirúrgic'},pediatrics:{es:'Pediatría',ca:'Pediatria'},geriatrics:{es:'Geriatría',ca:'Geriatria'},sem:{es:'SEM',ca:'SEM'},occupational:{es:'Enfermería del trabajo',ca:'Infermeria del treball'},bloodbank:{es:'Banco de sangre',ca:'Banc de sang'},radiology:{es:'Radiología',ca:'Radiologia'},midwife:{es:'Matrona · requisito normativo',ca:'Llevador/a · requisit normatiu'},neurology:{es:'Neurología',ca:'Neurologia'},other:{es:'Puesto de trabajo convocado',ca:'Lloc de treball convocat'}
+  };
+
+  function tr(key){ return T[state.lang][key] ?? T.es[key] ?? key; }
+  function updateI18n(){
+    document.documentElement.lang = state.lang;
+    $$('[data-i18n]').forEach(el => { const v = tr(el.dataset.i18n); if (v != null) el.innerHTML = v; });
+    $$('.lang-btn').forEach(b => { const active = b.dataset.lang === state.lang; b.classList.toggle('is-active', active); b.setAttribute('aria-pressed', String(active)); });
+    updateTemplatesLanguage();
+    populateCategory();
+    populateService();
+    renderRoute();
+    renderExperience();
+    renderMeritUI();
+    updateEligibility();
+    if (state.step === 4) renderResults();
+  }
+
+  function updateTemplatesLanguage(){
+    $$('.dynamic-item').forEach(item => {
+      $$('[data-label]', item).forEach(el => el.textContent = tr(el.dataset.label));
+      $$('[data-label-option]', item).forEach(el => el.textContent = tr(el.dataset.labelOption));
+      const title = $('.item-title', item);
+      if (title) title.textContent = item.classList.contains('course-item') ? tr('courseRule') : tr('academicRule');
+    });
+  }
+
+  function currentSelection(){ return { group: $('#group').value, process: $('#process').value, category: $('#category').value, service: $('#service').value }; }
+  function route(){ return P.resolveRoute(currentSelection()); }
+
+  function populateCategory(){
+    const group = $('#group').value;
+    const prev = $('#category').value;
+    $('#category').innerHTML = `<option value="">${esc(tr('selectOption'))}</option>`;
+    const data = P.groupData[group];
+    if (!data) return populateService();
+    data.categories.forEach(([value]) => {
+      const o = document.createElement('option'); o.value = value; o.textContent = categoryLabels[value]?.[state.lang] || value; $('#category').appendChild(o);
+    });
+    if ([...$('#category').options].some(o=>o.value===prev)) $('#category').value=prev;
+    if (!$('#category').value && $('#category').options.length===2) $('#category').selectedIndex=1;
+    populateService();
+  }
+
+  function populateService(){
+    const {group,category}=currentSelection();
+    const prev=$('#service').value; $('#service').innerHTML=`<option value="">${esc(tr('selectOption'))}</option>`;
+    const services=P.groupData[group]?.services?.[category]||[];
+    services.forEach(([value])=>{const o=document.createElement('option');o.value=value;o.textContent=serviceLabels[value]?.[state.lang]||value;$('#service').appendChild(o);});
+    if ([...$('#service').options].some(o=>o.value===prev)) $('#service').value=prev;
+    if (!$('#service').value && $('#service').options.length===2) $('#service').selectedIndex=1;
+    onRouteChange();
+  }
+
+  function renderRoute(){
+    const r=route(), box=$('#routePreview');
+    if (!r){box.innerHTML='';return;}
+    if(r.unsupported){box.innerHTML=`<div class="route-box route-box--warning"><span class="route-box__badge">${esc(tr('routeUnsupported'))}</span><div><h4>${esc(tr('routeUnsupported'))}</h4><p>${esc(tr('routeG22Other'))}</p><small>${esc(tr('sourceSection'))}: § ${esc(r.section)}</small></div></div>`;return;}
+    const seniority=r.rankingMode==='seniority';
+    const title=seniority?tr('routeSeniority'):tr('routeFull');
+    const text=seniority?tr('routeSeniorityText'):tr('routeFullText');
+    const maxText=seniority?'':` · ${r.expMax}+${r.meritsMax} = 100`;
+    box.innerHTML=`<div class="route-box"><span class="route-box__badge">${esc(title)}</span><div><h4>${esc(title)}${esc(maxText)}</h4><p>${esc(text)}</p><small>${esc(tr('sourceSection'))}: § ${esc(r.section)}</small>${currentSelection().group==='g12'?`<small>${esc(tr('group12AreaNote'))}</small>`:''}</div></div>`;
+  }
+
+  function onRouteChange(){
+    renderRoute(); renderSpecificRequirements(); renderExperience(); renderMeritUI(); updateEligibility(); updateLiveExperience();
+  }
+
+  function renderSpecificRequirements(){
+    const req=P.specificRequirement(currentSelection()), c=$('#specificRequirements'); c.innerHTML='';
+    if(!req) return;
+    const addCheck=(id,labelKey,checked=false)=>{const l=document.createElement('label');l.className='check-row';l.innerHTML=`<input id="${id}" type="checkbox" ${checked?'checked':''}><span>${esc(tr(labelKey))}</span>`;c.appendChild(l);$(`#${id}`).addEventListener('change',updateEligibility);};
+    const map={specificSpecialty:'reqSpecificSpecialty',midwifeSpecialty:'reqMidwife',geriatricSpecialty:'reqGeriatrics',occupationalSpecialty:'reqOccupational',bloodBankAccreditation:'reqBlood',radiologyAccreditation:'reqRadiology'};
+    if(req.key==='semRequirement'){
+      c.insertAdjacentHTML('beforeend',`<div class="notice notice--info"><span>${esc(tr('reqSem30'))}<br>${esc(tr('reqSem3'))}</span></div>`);
+      addCheck('sem30ects','confirmSem30');addCheck('sem3years','confirmSem3');
+    } else {
+      c.insertAdjacentHTML('beforeend',`<div class="notice notice--info"><span>${esc(tr(map[req.key]))}</span></div>`);
+      addCheck('specificReqOk','confirmRequirement', req.level==='provisionalPossible');
+    }
+  }
+
+  function updateEligibility(){
+    const sel=currentSelection(), issues=[];
+    if(!$('#isIndefinite').checked)issues.push(tr('reqIndefinite'));
+    if(!$('#isActive').checked)issues.push(tr('reqActive'));
+    if(sel.process==='shift'){
+      if($('#plantilla').value!=='PB')issues.push(tr('reqShiftPB'));
+      if($('#dedication').value!=='100')issues.push(tr('reqShift100'));
+      if(!$('#sameCategory').checked)issues.push(tr('reqShiftSame'));
+    } else if(sel.process==='increase'){
+      if($('#plantilla').value!=='PC')issues.push(tr('reqIncreasePC'));
+      if(!$('#sameCategory').checked)issues.push(tr('reqIncreaseSame'));
+    } else if(sel.process==='category'){
+      if($('#sameCategory').checked)issues.push(tr('reqCategoryDifferent'));
+      if(!$('#hasRequiredTitle').checked)issues.push(tr('reqCategoryTitle'));
+    }
+    const req=P.specificRequirement(sel);
+    if(req){
+      if(req.key==='semRequirement'){
+        if($('#sem30ects') && !$('#sem30ects').checked)issues.push(tr('reqSem30'));
+        if($('#sem3years') && !$('#sem3years').checked)issues.push(tr('reqSem3'));
+      } else if(req.level==='required' && $('#specificReqOk') && !$('#specificReqOk').checked){
+        const key={specificSpecialty:'reqSpecificSpecialty',midwifeSpecialty:'reqMidwife',geriatricSpecialty:'reqGeriatrics',occupationalSpecialty:'reqOccupational'}[req.key]; if(key)issues.push(tr(key));
+      }
+    }
+    const out=$('#eligibilityResult');
+    out.innerHTML=issues.length?`<div class="notice notice--danger"><div><strong>${esc(tr('eligibilityFail'))}</strong><ul>${issues.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div></div>`:`<div class="notice notice--success"><span>${esc(tr('eligibilityOk'))}</span></div>`;
+  }
+
+  function renderExperience(){
+    const r=route();
+    $('#categoryExperienceCard').hidden=!r || !!r.unsupported || !r.categoryExp;
+    $('#serviceExperienceCard').hidden=!r || !!r.unsupported || !r.serviceExp;
+    $('#seniorityRule').textContent = r ? `${tr('seniorityRule')} · § ${r.expSection}` : tr('seniorityRule');
+    if(r?.categoryExp) $('#categoryExpRule').textContent=`${r.categoryExp.rate} ${tr('points')}/año · ${tr('max')} ${r.categoryExp.max} · § ${r.expSection}`;
+    if(r?.serviceExp) $('#serviceExpRule').textContent=`${r.serviceExp.rate} ${tr('points')}/año · ${tr('max')} ${r.serviceExp.max} · § ${r.expSection}`;
+    updateLiveExperience();
+  }
+
+  function periodScore(years,months,rule){
+    if(!rule)return {secure:0,possible:0,pending:false};
+    years=Math.max(0,num(years)); months=Math.max(0,Math.min(11,num(months)));
+    if(rule.completedYearsOnly){const v=clamp(Math.floor(years)*rule.rate,rule.max);return {secure:v,possible:v,pending:false};}
+    const secure=clamp(Math.floor(years)*rule.rate,rule.max);
+    const possible=clamp((Math.floor(years)+months/12)*rule.rate,rule.max);
+    return {secure,possible,pending:months>0 && possible>secure};
+  }
+
+  function experienceScores(){
+    const r=route(); if(!r||r.unsupported)return null;
+    const seniority=periodScore($('#seniorityYears').value,$('#seniorityMonths').value,r.seniority);
+    const category=periodScore($('#categoryYears').value,$('#categoryMonths').value,r.categoryExp);
+    const service=periodScore($('#serviceYears').value,$('#serviceMonths').value,r.serviceExp);
+    const secure=clamp(seniority.secure+category.secure+service.secure,r.expMax), possible=clamp(seniority.possible+category.possible+service.possible,r.expMax);
+    return {seniority,category,service,secure,possible,pending:category.pending||service.pending};
+  }
+
+  function updateLiveExperience(){
+    const s=experienceScores();
+    if(!s){$('#seniorityPoints').textContent='—';$('#categoryExpPoints').textContent='—';$('#serviceExpPoints').textContent='—';return;}
+    $('#seniorityPoints').textContent=fmt(s.seniority.secure);
+    $('#categoryExpPoints').textContent=s.category.pending?`${fmt(s.category.secure)}–${fmt(s.category.possible)}`:fmt(s.category.secure);
+    $('#serviceExpPoints').textContent=s.service.pending?`${fmt(s.service.secure)}–${fmt(s.service.possible)}`:fmt(s.service.secure);
+    $('#fractionWarning').hidden=!s.pending; $('#fractionWarning').textContent=s.pending?tr('expFractionWarning'):'';
+  }
+
+  function renderMeritUI(){
+    const r=route();
+    const noMerits=!r||r.unsupported;
+    $('#meritsContent').hidden=noMerits;
