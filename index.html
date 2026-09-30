@@ -998,3 +998,143 @@ button{cursor:pointer}
     const r=route();
     const noMerits=!r||r.unsupported;
     $('#meritsContent').hidden=noMerits;
+    $('#meritsNotApplicable').hidden=!r?.rankingMode && !r?.unsupported;
+    if(r?.rankingMode){$('#meritsNotApplicable').hidden=false;$('#meritsNotApplicable').textContent=tr('meritNotApplicable');}
+    if(r?.unsupported){$('#meritsNotApplicable').hidden=false;$('#meritsNotApplicable').textContent=tr('routeG22Other');}
+    if(!r||r.unsupported)return;
+    const helpMap={g12:'academicHelpG12',g22special:'academicHelpG22Special',g22common:'academicHelpG22Common',g3special:'academicHelpG3',g3common:'academicHelpG3',g4567:'academicHelpG4567',seniorityOnly: academicHelpForMeritBase(r.meritBase)};
+    const hk=helpMap[r.key]||academicHelpForMeritBase(r.meritBase); $('#academicHelp').textContent=hk?tr(hk):'';
+    const ah=r.teachingMode==='g12'?'activityHelpG12':r.teachingMode==='specific06'?'activityHelpSpecific':'activityHelpBase'; $('#researchTeachingHelp').textContent=tr(ah);
+    renderActivityFields(r); refreshAcademicOptions(r); updateDynamicCalculations();
+  }
+  function academicHelpForMeritBase(base){if(!base)return'academicHelpG4567';return base.key==='g12'?'academicHelpG12':base.key==='g22special'?'academicHelpG22Special':base.key==='g22common'?'academicHelpG22Common':base.key.startsWith('g3')?'academicHelpG3':'academicHelpG4567';}
+
+  function renderActivityFields(r){
+    const c=$('#activityFields'), old={}; $$('input[data-act]',c).forEach(i=>old[i.dataset.act]=i.value); c.innerHTML='';
+    const add=(key,label,rate)=>{const d=document.createElement('label');d.className='field';d.innerHTML=`<span>${esc(tr(label))} · ${rate} ${esc(tr('points'))}</span><input data-act="${key}" type="number" min="0" step="1" value="${esc(old[key]||0)}"><small>${esc(tr('activitiesYears'))}</small>`;c.appendChild(d);};
+    if(r.teachingMode==='g12'){add('research','research',0.3);add('tutor','tutorResidents',1);add('coord','coordinatorResidents',0.5);add('practices','practices',0.3);add('onboarding','onboarding',0.3);add('continuing','continuingTeaching',0.3);}
+    else if(r.teachingMode==='specific06'){add('researchSpecific','researchSpecific',0.6);add('researchBase','researchNonSpecific',0.3);add('teachingSpecific','teachingSpecific',0.6);add('teachingBase','teachingNonSpecific',0.3);}
+    else {add('research','research',0.3);add('teaching','teaching',0.3);}
+    $$('input',c).forEach(i=>i.addEventListener('input',updateDynamicCalculations));
+  }
+
+  function academicConfig(r){ return r?.academics || r?.meritBase?.academics || []; }
+  function refreshAcademicOptions(r=route()){
+    const list=academicConfig(r); $$('.academic-item').forEach(item=>{const sel=$('[data-field="type"]',item),prev=sel.value;sel.innerHTML='';list.forEach(a=>{const o=document.createElement('option');o.value=a.value;o.textContent=a[state.lang]||a.es;sel.appendChild(o);});if([...sel.options].some(o=>o.value===prev))sel.value=prev; $('.academic-specific-field',item).hidden=!list.some(a=>a.specificPoints && a.specificPoints!==a.points);});
+  }
+
+  function addCourse(){const f=$('#courseTemplate').content.cloneNode(true),item=$('.course-item',f);$('#coursesList').appendChild(f);bindDynamicItem($('#coursesList').lastElementChild);updateTemplatesLanguage();updateDynamicCalculations();}
+  function addAcademic(){const f=$('#academicTemplate').content.cloneNode(true);$('#academicList').appendChild(f);const item=$('#academicList').lastElementChild;bindDynamicItem(item);refreshAcademicOptions();updateTemplatesLanguage();updateDynamicCalculations();}
+  function addLanguage(){const f=$('#languageTemplate').content.cloneNode(true);$('#languagesList').appendChild(f);const item=$('#languagesList').lastElementChild;bindDynamicItem(item);updateTemplatesLanguage();updateDynamicCalculations();}
+  function bindDynamicItem(item){$('.remove-item',item)?.addEventListener('click',()=>{item.remove();updateDynamicCalculations();});$$('input,select',item).forEach(el=>el.addEventListener('input',updateDynamicCalculations));}
+
+  function cutoffStatus(dateStr){
+    const pub=$('#publicationDate').value; if(!pub)return 'unchecked'; if(!dateStr)return 'missing'; return dateStr < pub ? 'ok' : 'late';
+  }
+
+  function courseResult(item,r){
+    const name=$('[data-field="name"]',item).value.trim()||tr('emptyCourse');
+    const hours=num($('[data-field="hours"]',item).value),ects=num($('[data-field="ects"]',item).value),cfc=num($('[data-field="cfc"]',item).value),days=num($('[data-field="days"]',item).value);
+    let h=0,conversion=''; if(hours>0){h=hours;conversion=`${fmt(h,1)} h`;} else if(ects>0){h=ects*25;conversion=`${fmt(ects,2)} ECTS × 25 = ${fmt(h,1)} h`;} else if(cfc>0){h=cfc*10;conversion=`${fmt(cfc,2)} CFC × 10 = ${fmt(h,1)} h`;} else if(days>0){h=days*3;conversion=`${fmt(days,0)} × 3 h/día = ${fmt(h,1)} h`;}
+    const modality=$('[data-field="modality"]',item).value==='onsite'?'onsite':'online';
+    const spec=$('[data-field="specific"]',item).value; const rates=r.courseRates;
+    const baseRate=modality==='onsite'?rates.onsite:rates.online; const highRate=modality==='onsite'?(rates.specificOnsite??baseRate):(rates.specificOnline??baseRate);
+    const lowRate=baseRate; let secureRate=spec==='yes'?highRate:lowRate,possibleRate=spec==='unknown'?highRate:secureRate; if(spec==='no')possibleRate=secureRate;
+    let secure=h*secureRate,possible=h*possibleRate; const pending=[]; let excludedReason='';
+    if(h<=0){secure=0;possible=0;pending.push(tr('hoursMissing'));}
+    const cut=cutoffStatus($('[data-field="date"]',item).value); if(cut==='late'){secure=possible=0;excludedReason=tr('afterCutoff');} else if(cut==='missing'){secure=0;pending.push(tr('dateMissing'));}
+    const before=$('[data-field="beforeTitle"]',item).value; if(before==='yes'){secure=possible=0;excludedReason=tr('beforeTitleNoPoints');} else if(before==='yes-compatible' && possible>0){secure=0;pending.push(tr('beforeTitlePending'));}
+    if(spec==='unknown' && highRate>lowRate && possible>secure)pending.push(tr('specificityPending'));
+    return {name,h,conversion,secure,possible,pending,excludedReason,section:r.meritsSection,rateSecure:secureRate,ratePossible:possibleRate};
+  }
+
+  function academicResult(item,r){
+    const name=$('[data-field="name"]',item).value.trim()||tr('emptyAcademic'),type=$('[data-field="type"]',item).value,def=academicConfig(r).find(x=>x.value===type); if(!def)return{name,secure:0,possible:0,pending:[tr('emptyAcademic')],section:r.meritsSection};
+    let base=def.points,high=def.specificPoints??base; const spec=$('[data-field="specific"]',item)?.value||'no'; let secure=spec==='yes'?high:base,possible=spec==='unknown'?high:secure; const pending=[]; let excludedReason='';
+    if($('[data-field="required"]',item).checked){secure=possible=0;excludedReason=tr('requiredNoPoints');}
+    const hours=num($('[data-field="hours"]',item).value),ects=num($('[data-field="ects"]',item).value); const duration=hours>0?hours:ects>0?ects*25:0;
+    if(def.minHours && !excludedReason){if(duration===0){secure=0;pending.push(`${tr('minDurationMissing')} (${def.minHours} h)`);} else if(duration<def.minHours){secure=possible=0;excludedReason=`${tr('belowMin')} (${def.minHours} h)`;}}
+    const cut=cutoffStatus($('[data-field="date"]',item).value); if(cut==='late'){secure=possible=0;excludedReason=tr('afterCutoff');} else if(cut==='missing'&&!excludedReason){secure=0;pending.push(tr('dateMissing'));}
+    if(spec==='unknown'&&high>base&&possible>secure)pending.push(tr('specificityPending'));
+    return{name,secure,possible,pending,excludedReason,section:r.meritsSection,duration,def};
+  }
+
+  function certificatesResult(){
+    const actic=num($('#actic').value),catalan=num($('#catalan').value); const perLang={}; $$('#languagesList .language-row').forEach(row=>{const name=$('[data-field="name"]',row).value.trim().toLowerCase()||`_${Math.random()}`,v=num($('[data-field="level"]',row).value);perLang[name]=Math.max(perLang[name]||0,v);}); const other=Math.min(1,Object.values(perLang).reduce((a,b)=>a+b,0)); return{actic,catalan,other,total:actic+catalan+other};
+  }
+
+  function activitiesResult(r){
+    const get=k=>num($(`[data-act="${k}"]`)?.value); let research=0,teaching=0;
+    if(r.teachingMode==='g12'){research=get('research')*.3;teaching=get('tutor')*1+get('coord')*.5+get('practices')*.3+get('onboarding')*.3+get('continuing')*.3;}
+    else if(r.teachingMode==='specific06'){research=get('researchSpecific')*.6+get('researchBase')*.3;teaching=get('teachingSpecific')*.6+get('teachingBase')*.3;}
+    else {research=get('research')*.3;teaching=get('teaching')*.3;}
+    return{research,teaching,total:research+teaching};
+  }
+
+  function meritsScores(){
+    const r=route(); if(!r||r.unsupported)return null;
+    const courses=$$('.course-item').map(i=>courseResult(i,r)); const academics=$$('.academic-item').map(i=>academicResult(i,r)); const certs=certificatesResult(),acts=activitiesResult(r);
+    const courseSecure=courses.reduce((s,x)=>s+x.secure,0),coursePossible=courses.reduce((s,x)=>s+x.possible,0),academicSecure=academics.reduce((s,x)=>s+x.secure,0),academicPossible=academics.reduce((s,x)=>s+x.possible,0);
+    const secureRaw=courseSecure+academicSecure+certs.total+acts.total,possibleRaw=coursePossible+academicPossible+certs.total+acts.total;
+    const secure=clamp(secureRaw,r.meritsMax),possible=clamp(possibleRaw,r.meritsMax);
+    return{courses,academics,certs,acts,secureRaw,possibleRaw,secure,possible,pending:[...courses,...academics].flatMap(x=>x.pending.map(p=>({name:x.name,text:p}))) };
+  }
+
+  function updateDynamicCalculations(){
+    const r=route(); if(!r||r.unsupported)return;
+    $$('.course-item').forEach(item=>{const x=courseResult(item,r),el=$('.item-calc',item);el.innerHTML=x.excludedReason?`<span class="tag tag--pending">${esc(tr('excluded'))}</span> ${esc(x.excludedReason)}`:`${esc(x.conversion||'—')} · <strong>${fmt(x.secure)}</strong>${x.possible>x.secure?` – <strong>${fmt(x.possible)}</strong>`:''} ${esc(tr('points'))}${x.pending.length?` · <span class="tag tag--pending">${esc(tr('pending'))}</span>`:''}`;});
+    $$('.academic-item').forEach(item=>{const x=academicResult(item,r),el=$('.item-calc',item);el.innerHTML=x.excludedReason?`<span class="tag tag--pending">${esc(tr('excluded'))}</span> ${esc(x.excludedReason)}`:`<strong>${fmt(x.secure)}</strong>${x.possible>x.secure?` – <strong>${fmt(x.possible)}</strong>`:''} ${esc(tr('points'))}${x.pending.length?` · <span class="tag tag--pending">${esc(tr('pending'))}</span>`:''}`;});
+  }
+
+  function buildPending(exp,merits){
+    const arr=[]; if(exp?.pending)arr.push({name:tr('experienceBlock'),text:tr('monthsPending')}); if(!$('#publicationDate').value)arr.push({name:tr('publicationDate'),text:tr('cutOffWarning')}); if(merits)arr.push(...merits.pending); return arr;
+  }
+
+  function renderResults(){
+    const r=route(),out=$('#results');
+    if(!r){out.innerHTML=`<div class="notice notice--danger">${esc(tr('selectOption'))}</div>`;return;}
+    if(r.unsupported){out.innerHTML=`<div class="result-hero"><div><div class="result-kicker">${esc(tr('resultSubtitle'))}</div><h3>${esc(tr('routeUnsupported'))}</h3><p>${esc(tr('unsupportedResult'))}</p></div><div class="result-hero__score"><div class="result-number">—</div></div></div><div class="notice notice--warning"><strong>${esc(tr('sourceSection'))} § ${esc(r.section)}</strong><span>${esc(tr('routeG22Other'))}</span></div>${disclaimerHtml()}`;return;}
+    const exp=experienceScores(), merits=meritsScores(),pending=buildPending(exp,merits);
+    if(r.rankingMode==='seniority'){
+      const tSecure=merits?.secureRaw||0,tPossible=merits?.possibleRaw||0;
+      out.innerHTML=`<div class="result-hero"><div><div class="result-kicker">${esc(tr('resultSubtitle'))}</div><h3>${esc(tr('seniorityRanking'))}</h3><p>${esc(tr('seniorityRankingText'))}</p></div><div class="result-hero__score"><div class="result-number">${fmt(exp.seniority.secure)} <small>${state.lang==='ca'?'anys/punts':'años/puntos'}</small></div></div></div>
+      <div class="result-grid"><div class="result-card"><h4>${esc(tr('tiebreakTitle'))}</h4><div class="tiebreak-score">${fmt(tSecure)}${tPossible>tSecure?` – ${fmt(tPossible)}`:''}</div><p>${esc(tr('tiebreakFormation'))}</p><small>${esc(tr('tiebreakNote'))} · § 2.2.1</small></div>${pendingHtml(pending)}</div>${literalWarningHtml(r)}${traceHtml(r,exp,merits)}${disclaimerHtml()}`;return;
+    }
+    const secure=exp.secure+merits.secure,possible=exp.possible+merits.possible; const range=possible>secure;
+    out.innerHTML=`<div class="result-hero"><div><div class="result-kicker">${esc(tr('resultSubtitle'))}</div><h3>${esc(tr('resultTitle'))}</h3><p>${range?esc(tr('resultRange')):esc(tr('secureScore'))}</p></div><div class="result-hero__score"><div class="result-number">${range?`${fmt(secure)}–${fmt(possible)}`:fmt(secure)} <small>/ 100</small></div></div></div>
+    <div class="result-grid"><div class="result-card"><h4>${esc(tr('total'))}</h4><div class="breakdown"><div class="breakdown-row"><span>${esc(tr('experienceBlock'))} <small>(${esc(tr('max'))} ${r.expMax})</small></span><strong>${exp.possible>exp.secure?`${fmt(exp.secure)}–${fmt(exp.possible)}`:fmt(exp.secure)}</strong></div><div class="breakdown-row"><span>${esc(tr('meritsBlock'))} <small>(${esc(tr('max'))} ${r.meritsMax})</small></span><strong>${merits.possible>merits.secure?`${fmt(merits.secure)}–${fmt(merits.possible)}`:fmt(merits.secure)}</strong></div><div class="breakdown-row"><span>${esc(tr('rawMerits'))}</span><strong>${merits.possibleRaw>merits.secureRaw?`${fmt(merits.secureRaw)}–${fmt(merits.possibleRaw)}`:fmt(merits.secureRaw)}</strong></div></div></div>${pendingHtml(pending)}</div>${literalWarningHtml(r)}${traceHtml(r,exp,merits)}${disclaimerHtml()}`;
+  }
+
+  function pendingHtml(pending){return `<div class="result-card"><h4>${esc(tr('pending'))}</h4>${pending.length?`<div class="trace-list">${pending.map(p=>`<div class="trace-item"><b>${esc(p.name)}</b><span>${esc(p.text)}</span></div>`).join('')}</div>`:`<div class="notice notice--success"><span>${esc(tr('noPending'))}</span></div>`}</div>`;}
+  function literalWarningHtml(r){return r.literalRateWarning?`<div class="notice notice--warning"><div><strong>${esc(tr('literalRateTitle'))}</strong><br><span>${esc(tr('literalRateText'))}</span></div></div>`:'';}
+  function traceHtml(r,exp,m){
+    const rows=[]; rows.push([tr('seniority'),`${fmt(exp.seniority.secure)} ${tr('points')}`,r.expSection]); if(r.categoryExp)rows.push([tr('categoryExperience'),`${fmt(exp.category.secure)}${exp.category.possible>exp.category.secure?`–${fmt(exp.category.possible)}`:''}`,r.expSection]); if(r.serviceExp)rows.push([tr('serviceExperience'),`${fmt(exp.service.secure)}${exp.service.possible>exp.service.secure?`–${fmt(exp.service.possible)}`:''}`,r.expSection]);
+    m.courses.forEach(x=>rows.push([`${tr('courseRule')}: ${x.name}`,`${fmt(x.secure)}${x.possible>x.secure?`–${fmt(x.possible)}`:''}`,r.meritsSection])); m.academics.forEach(x=>rows.push([`${tr('academicRule')}: ${x.name}`,`${fmt(x.secure)}${x.possible>x.secure?`–${fmt(x.possible)}`:''}`,r.meritsSection])); if(m.certs.actic)rows.push([tr('acticRule'),fmt(m.certs.actic),r.meritsSection]); if(m.certs.catalan)rows.push([tr('catalanRule'),fmt(m.certs.catalan),r.meritsSection]); if(m.certs.other)rows.push([tr('languagesRule'),fmt(m.certs.other),r.meritsSection]); if(m.acts.research)rows.push([tr('researchRule'),fmt(m.acts.research),r.meritsSection]); if(m.acts.teaching)rows.push([tr('teachingRule'),fmt(m.acts.teaching),r.meritsSection]);
+    return `<div class="result-card pending-box"><h4>${esc(tr('traceability'))}</h4><div class="trace-list">${rows.map(([n,v,s])=>`<div class="trace-item"><b>${esc(n)} · ${esc(v)} ${esc(tr('points'))}</b><span><span class="tag tag--source">§ ${esc(s)}</span></span></div>`).join('')}</div></div>`;
+  }
+  function disclaimerHtml(){return `<div class="notice notice--warning pending-box"><div><strong>${esc(tr('disclaimerTitle'))}</strong><br><span>${esc(tr('disclaimerText'))}</span></div></div>`;}
+
+  function goStep(n){
+    if(n>1 && !basicSelectionOk()){alert(tr('selectOption'));return;}
+    state.step=n; $$('.step-panel').forEach(p=>p.classList.toggle('is-active',Number(p.dataset.step)===n)); $$('.step').forEach(b=>{const x=Number(b.dataset.stepTarget);b.classList.toggle('is-active',x===n);b.classList.toggle('is-done',x<n);}); if(n===4)renderResults(); document.querySelector('.calculator').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function basicSelectionOk(){const s=currentSelection();return s.group&&s.process&&s.category&&s.service;}
+  function resetAll(){if(!confirm(state.lang==='ca'?'Vols reiniciar totes les dades introduïdes?':'¿Quieres reiniciar todos los datos introducidos?'))return;$('#scoreForm').reset();$('#coursesList').innerHTML='';$('#academicList').innerHTML='';$('#languagesList').innerHTML='';populateCategory();onRouteChange();goStep(1);}
+
+  function attachEvents(){
+    $$('.lang-btn').forEach(b=>b.addEventListener('click',()=>{state.lang=b.dataset.lang;updateI18n();}));
+    $('#protocolButton').addEventListener('click',()=>$('#protocolDialog').showModal()); $('#startButton').addEventListener('click',()=>$('#calculator').scrollIntoView({behavior:'smooth'})); $('#howButton').addEventListener('click',()=>$('#method').scrollIntoView({behavior:'smooth'}));
+    $('#group').addEventListener('change',populateCategory);$('#category').addEventListener('change',populateService);$('#process').addEventListener('change',onRouteChange);$('#service').addEventListener('change',onRouteChange);$('#publicationDate').addEventListener('change',updateDynamicCalculations);
+    ['isIndefinite','isActive','plantilla','dedication','sameCategory','hasRequiredTitle'].forEach(id=>$(`#${id}`).addEventListener('change',updateEligibility));
+    ['seniorityYears','seniorityMonths','categoryYears','categoryMonths','serviceYears','serviceMonths'].forEach(id=>$(`#${id}`).addEventListener('input',updateLiveExperience));
+    $('#addCourse').addEventListener('click',addCourse);$('#addAcademic').addEventListener('click',addAcademic);$('#addLanguage').addEventListener('click',addLanguage);$('#actic').addEventListener('change',updateDynamicCalculations);$('#catalan').addEventListener('change',updateDynamicCalculations);
+    $$('.next-step').forEach(b=>b.addEventListener('click',()=>goStep(Number(b.dataset.next))));$$('.prev-step').forEach(b=>b.addEventListener('click',()=>goStep(Number(b.dataset.prev))));$$('.step').forEach(b=>b.addEventListener('click',()=>goStep(Number(b.dataset.stepTarget))));
+    $('#resetButton').addEventListener('click',resetAll);$('#newCalculation').addEventListener('click',resetAll);$('#printButton').addEventListener('click',()=>window.print());
+  }
+
+  attachEvents(); populateCategory(); updateI18n(); onRouteChange();
+})();
+
+</script>
+</body>
+</html>
